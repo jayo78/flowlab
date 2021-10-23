@@ -9,6 +9,7 @@ const User = require("../models/User");
 const Token = require("../models/Token")
 const nodemailer = require("nodemailer")
 const crypto = require("crypto")
+const results = require('dotenv').config()
 
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -41,9 +42,9 @@ router.post("/register", (req, res) => {
           return res.status(500).send({ msg: 'Internal Error' })
         }
 	
-      	var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: 'rajkarra38@gmail.com', pass: 'A@L#1111' } })
+      	var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: process.env.EMAIL, pass: process.env.PASS } })
       	console.log('sender created')
-	var mailConfig = { from: 'rajkarra38@gmail.com', to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
+	var mailConfig = { from: process.env.EMAIL, to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
         
       	//sender.sendMail(mailConfig, function(err) {
 	      //console.log(res.ended)
@@ -66,7 +67,7 @@ router.post("/register", (req, res) => {
 })
 
 
-router.get("/confirmation/email/:email/token/:token", (req, res) => {
+router.get("/confirmation/:email/:token", (req, res) => {
   console.log('confirming')
   Token.findOne({ token: req.params.token }, function(err, token) {
     if(!token) {
@@ -95,6 +96,9 @@ router.get("/confirmation/email/:email/token/:token", (req, res) => {
     }
   });
 }); 
+
+
+
 
 
 router.post("/login", (req, res) => {
