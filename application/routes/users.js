@@ -86,30 +86,10 @@ router.get("/confirmation/:email/:token", (req, res) => {
 	  return res.status(200).send('Your account has been verified successfully')
 	} 
       });
-      /*
-      User.findOne({ id: token._userId, email: req.params.email }, function(err, user) {
-	if(!user) {
-	  return res.status(401).send({ msg: 'User Not Found '})
-	}
-	else if(user.isVerified){
-	  return res.status(200).send({ msg: 'The user has been verified. Please Login!'})
-	}
-	else {
-	  user.isVerfied = true
-          user.save(function (err) {
-	    if(err) {
-              return res.status(500).send('Internal Error')
-	    }
-            else {
-	      return res.status(200).send('Your account has been verified successfully!')
-	    }
-	  });
-	}
-      });
-      */
     }
   });
-}); 
+});
+ 
 
 
 
