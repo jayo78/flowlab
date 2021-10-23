@@ -3,7 +3,7 @@ const isEmpty = require("is-empty");
 
 module.exports = function validateRegisterInput(data) {
   let errors = {};
-  
+
   data.name = !isEmpty(data.name) ? data.name : "Billy William";
   console.log(data.name)
   data.email = !isEmpty(data.email) ? data.email : "";
@@ -18,22 +18,29 @@ module.exports = function validateRegisterInput(data) {
     errors.email = "Email field is required";
   } else if (!Validator.isEmail(data.email)) {
     errors.email = "Email is invalid";
+  } else {
+    let tokens = data.email.split("."); // last element after splitting is TLD
+    if (tokens[tokens.length - 1] != 'edu') {
+      errors.email = "Not '.edu' email.";
+    }
   }
 
   if (Validator.isEmpty(data.password)) {
     errors.password = "Password field is required";
   }
-if (Validator.isEmpty(data.password2)) {
+  if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Confirm password field is required";
   }
-if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
+  if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
     errors.password = "Password must be at least 6 characters";
   }
-if (!Validator.equals(data.password, data.password2)) {
+  if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Passwords must match";
   }
 
-return {
+
+
+  return {
     errors,
     isValid: isEmpty(errors)
   };
