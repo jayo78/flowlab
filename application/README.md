@@ -25,4 +25,4 @@ To install mongo, refer to the following instructions [install MongoDB](https://
 Postman is a tool to craft and send http requests to the backend for debugging/testing purposes. To set it up, refer to the following instructions [install postman](https://learning.postman.com/docs/getting-started/installation-and-updates/). In order to make requests to localhost, the desktop agent is needed 
 
 
-
+The frontend currently does not compile right now
