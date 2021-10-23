@@ -80,4 +80,5 @@ return (
     );
   }
 }
-export default Login;
+
+module.export = Login;
