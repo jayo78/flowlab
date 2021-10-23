@@ -104,4 +104,5 @@ return (
     );
   }
 }
-export default Register;
+
+module.export Register;

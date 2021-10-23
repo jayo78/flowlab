@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import NavBar from "./components/layout/Navbar";
-import Landing from "./components/layout/Landing";
-import Register from "./components/auth/Register";
-import Login from "./components/auth/Login";
+
+import { Navbar, Landing } from "./components/layout/";
+import { Register, Login } from "./components/auth";
+
 
 class App extends Component {
   render() {
