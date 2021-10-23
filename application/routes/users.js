@@ -31,7 +31,7 @@ router.post("/register", (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then(user => console.log(user))//res.json(user))
+            .then(user => console.log(user))
             .catch(err => console.log(err));
         });
       });
@@ -43,18 +43,7 @@ router.post("/register", (req, res) => {
         }
 	
       	var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: process.env.EMAIL, pass: process.env.PASS } })
-      	console.log('sender created')
 	var mailConfig = { from: process.env.EMAIL, to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
-        
-      	//sender.sendMail(mailConfig, function(err) {
-	      //console.log(res.ended)
-        //  console.log('sending mail')
-	        //  if(err) {
-	        //return res.status(500).send({ msg: 'Internal Error'})
-	          //  }
-	        //  else {
-	          //	return res.status(200).send({ msg: 'A verification email has been sent to ' + user.email + '. It will be expire after one day. If you not get verification Email click on resend token.' })
-	          //}   
         sender.sendMail(mailConfig, function(err) {
 		if(err) {
 		  res.status(500).send('Internal Error')
@@ -68,7 +57,6 @@ router.post("/register", (req, res) => {
 
 
 router.get("/confirmation/:email/:token", (req, res) => {
-  console.log('confirming')
   Token.findOne({ token: req.params.token }, function(err, token) {
     if(!token) {
       return res.status(400).send({ msg: 'Your verification link may have expired. Please click on resend for verify your Email.'})
@@ -92,7 +80,32 @@ router.get("/confirmation/:email/:token", (req, res) => {
  
 
 
-
+router.get('/resend', (req, res) => {
+  User.findOne({ email: req.body.email }, function(err, user) {
+    if(!user) {
+      res.status(400).send({ msg: 'Unable to find user' })
+    }
+    else if(user.isVerified) {
+      res.status(200).send({ msg: 'The user has been verified. Please Login!' })
+    }
+    else {
+      var token = new Token({ _userId: req.body.name, token: crypto.randomBytes(16).toString('hex') });
+      token.save(function(err) {
+	if(err) {
+	  return res.status(500).send({ msg: 'Internal Server Error' })
+	}
+        var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: process.env.EMAIL, pass: process.env.PASS } })
+        var mailConfig = { from: process.env.EMAIL, to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
+        sender.sendMail(mailConfig, function(err) {
+          if(err) {
+            res.status(500).send('Internal Error')
+          }
+        });
+	res.status(200).send({ msg: 'A verification email has been sent to ' + req.body.email + '. It will be expire after one day. If you not get verification Email click on resend token.' })	
+      });
+    }
+  });
+});
 
 
 router.post("/login", (req, res) => {
@@ -103,7 +116,6 @@ router.post("/login", (req, res) => {
 const email = req.body.email;
   const password = req.body.password;
   User.findOne({ email }).then(user => {
-    console.log(user)
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
