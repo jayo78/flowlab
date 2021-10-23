@@ -44,7 +44,7 @@ router.post("/register", (req, res) => {
 	
       	var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: process.env.EMAIL, pass: process.env.PASS } })
       	console.log('sender created')
-	var mailConfig = { from: process.env.EMAIL, to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
+	var mailConfig = { from: process.env.EMAIL, to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
         
       	//sender.sendMail(mailConfig, function(err) {
 	      //console.log(res.ended)
@@ -74,6 +74,19 @@ router.get("/confirmation/:email/:token", (req, res) => {
       return res.status(400).send({ msg: 'Your verification link may have expired. Please click on resend for verify your Email.'})
     }
     else {
+      
+      User.findOneAndUpdate({ id: token._userId, email: req.params.email }, {isVerified: true} , { upsert: false }, function(err, doc) {
+        if(err) {
+          return res.status(401).send({ msg: 'User Not Found'})
+	}
+	else if(doc.isVerified) {
+          return res.status(200).send({ msg: 'The user has been verified. Please Login!' })
+	}
+	else {
+	  return res.status(200).send('Your account has been verified successfully')
+	} 
+      });
+      /*
       User.findOne({ id: token._userId, email: req.params.email }, function(err, user) {
 	if(!user) {
 	  return res.status(401).send({ msg: 'User Not Found '})
@@ -93,6 +106,7 @@ router.get("/confirmation/:email/:token", (req, res) => {
 	  });
 	}
       });
+      */
     }
   });
 }); 
@@ -109,6 +123,7 @@ router.post("/login", (req, res) => {
 const email = req.body.email;
   const password = req.body.password;
   User.findOne({ email }).then(user => {
+    console.log(user)
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
