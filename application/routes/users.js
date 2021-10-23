@@ -35,18 +35,15 @@ router.post("/register", (req, res) => {
         });
       });
     
-      console.log(res.ended)
       var token = new Token({ _userId: req.body.name, token: crypto.randomBytes(16).toString('hex') });
       token.save(function (err) {
         if(err) {
           return res.status(500).send({ msg: 'Internal Error' })
         }
 	
-        console.log(res.ended)
-      	console.log('\nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token)
       	var sender = nodemailer.createTransport({ service: 'Gmail', secure: true, socketTimeout: 5000, auth: { user: 'rajkarra38@gmail.com', pass: 'A@L#1111' } })
       	console.log('sender created')
-	      var mailConfig = { from: 'rajkarra38@gmail.com', to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
+	var mailConfig = { from: 'rajkarra38@gmail.com', to: req.body.email, subject: 'Account Verification Link', text: 'Hello '+ req.body.name +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + req.body.email + '\/' + token.token + '\n\nThank You!\n' }
         
       	//sender.sendMail(mailConfig, function(err) {
 	      //console.log(res.ended)
@@ -68,6 +65,36 @@ router.post("/register", (req, res) => {
   });
 })
 
+
+router.get("/confirmation/email/:email/token/:token", (req, res) => {
+  console.log('confirming')
+  Token.findOne({ token: req.params.token }, function(err, token) {
+    if(!token) {
+      return res.status(400).send({ msg: 'Your verification link may have expired. Please click on resend for verify your Email.'})
+    }
+    else {
+      User.findOne({ id: token._userId, email: req.params.email }, function(err, user) {
+	if(!user) {
+	  return res.status(401).send({ msg: 'User Not Found '})
+	}
+	else if(user.isVerified){
+	  return res.status(200).send({ msg: 'The user has been verified. Please Login!'})
+	}
+	else {
+	  user.isVerfied = true
+          user.save(function (err) {
+	    if(err) {
+              return res.status(500).send('Internal Error')
+	    }
+            else {
+	      return res.status(200).send('Your account has been verified successfully!')
+	    }
+	  });
+	}
+      });
+    }
+  });
+}); 
 
 
 router.post("/login", (req, res) => {

@@ -20,9 +20,9 @@ module.exports = function validateRegisterInput(data) {
     errors.email = "Email is invalid";
   } else {
     let tokens = data.email.split("."); // last element after splitting is TLD
-    if (tokens[tokens.length - 1] != 'edu') {
-      errors.email = "Not '.edu' email.";
-    }
+    //if (tokens[tokens.length - 1] != 'edu') {
+    //  errors.email = "Not '.edu' email.";
+    //}
   }
 
   if (Validator.isEmpty(data.password)) {
