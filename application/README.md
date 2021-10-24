@@ -6,7 +6,7 @@ In the project directory, you can run:
 
 Installs any dependencies needed for the app to run.
 
-### `npm server`
+### `npm run server`
 
 Runs the backend in development mode. While in development mode, one can make changes to the backend code without restarting the server 
 
