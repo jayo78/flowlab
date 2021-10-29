@@ -18,7 +18,7 @@ router.route("/")
     .post(userRegister);
 
 router.post("/login", userLogin);
-router.post("/verify", verifyUser);
 router.post("/resend", resendVerification);
+router.get("/verify/:token", verifyUser);
 
 module.exports = router;

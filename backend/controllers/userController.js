@@ -27,21 +27,16 @@ const generateVerificationToken = (id) => {
 }
 
 const sendVerificationEmail = async (user, host) => {
-    try {
-        let newToken = generateVerificationToken(user._id);
-        await Token.create(newToken);
+    let newToken = generateVerificationToken(user._id);
+    await Token.create(newToken);
 
-        let link = "http://" + host + "/users/confirmation/" + newToken;
-        transporter.sendMail({
-            from: process.env.EMAIL_SENDER,
-            to: user.email,
-            subject: "Account Verification",
-            text: "Hello " + user.name + ",\n\n" + "Verify your account here: " + link
-        });
-
-    } catch (error) {
-        return error;
-    }
+    let link = "http://" + host + "/api/users/verify/" + newToken.token;
+    await transporter.sendMail({
+        from: process.env.EMAIL_SENDER,
+        to: user.email,
+        subject: "Account Verification",
+        text: "Hello " + user.name + ",\n\n" + "Verify your account here: " + link
+    });
 }
 
 const transporter = nodemailer.createTransport({
@@ -61,8 +56,9 @@ const transporter = nodemailer.createTransport({
 // desc: login user and return jwt
 const userLogin = async (req, res) => {
     let { email, password } = req.body;
+    console.log("logging in: " + email + ", " + password);
 
-    user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
     if (!user) {
         return res.status(400).json({ message: "Email not found" });
     }
@@ -74,11 +70,11 @@ const userLogin = async (req, res) => {
 
     if (await user.matchPassword(password)) {
         return res.status(201).json({
-            _id: newUser._id,
-            name: newUser.name,
-            email: newUser.email,
-            isVerified: newUser.isVerified,
-            token: generateJWT(newUser._id),
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isVerified: user.isVerified,
+            token: generateJWT(user._id),
         });
     } else {
         return res.status(400).json({ messsage: "Password doesn't match" });
@@ -89,7 +85,6 @@ const userLogin = async (req, res) => {
 // desc: register new user
 const userRegister = async (req, res) => {
     let { name, email, password } = req.body;
-    console.log(req.body);
     console.log("registering: " + email + ", " + name + ", " + password);
 
     const userExists = await User.findOne({ email: email });
@@ -104,12 +99,10 @@ const userRegister = async (req, res) => {
         password: password
     });
    
-    // TODO: only generate and send back jwt token in login?
     if (newUser) {
-        let error = await sendVerificationEmail(newUser, req.headers.host);
-        if (error) {
-            return res.status(500).json({ message: "Internal Error" });
-        } else {
+        // NOTE: Delete user account if verification sending fails? invalid email right?
+        sendVerificationEmail(newUser, req.headers.host)
+        .then(() => {
             return res.status(201).json({
                 _id: newUser._id,
                 name: newUser.name,
@@ -117,16 +110,21 @@ const userRegister = async (req, res) => {
                 isVerified: newUser.isVerified,
                 token: generateJWT(newUser._id),
             });
-        }
+        })
+        .catch(error => {
+            console.log("sendVerificationEmail Failed: " + error.message);
+            return res.status(400).json({ message: "Failed to send email to " + email});
+        });
     } else {
         return res.status(500).json({ message: "Internal Error" });
     }
 };
 
-// endpoint: POST /api/verify
+// endpoint: GET /api/verify/:token
 // desc: verify a user found from a given token
 const verifyUser = async (req, res) => {
-    const { token } = req.body;
+    const { token } = req.params;
+    console.log("verifying: " + token)
 
     const userToken = await Token.findOne({ token: token });
     if (!userToken) {

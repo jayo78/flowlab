@@ -6,21 +6,21 @@ const bcrypt = require("bcryptjs");
 var userSchema = mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-	unique: true
+	unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   isVerified: {
     type: Boolean,
 	required: true,
-    default: false
+    default: false,
   },
 
 }, {timestamps: true});
@@ -37,7 +37,7 @@ userSchema.pre("save", async function (next) {
 	}
 	
 	const salt = await bcrypt.genSalt(10);
-	this.password = bcrypt.hash(this.password, salt);
+	this.password = await bcrypt.hash(this.password, salt);
 });
 
 
