@@ -161,12 +161,14 @@ const resendVerification = async (req, res) => {
         return res.status(200).json({ message: "Email verified" });
     }
 
-    let error = await sendVerificationEmail(user, req.headers.host);
-    if (error) {
-        return res.status(500).json({ message: "Internal Error" });
-    } else {
-        return res.status(201).json({ message: "Verification resent to " + user.email});
-    }
+    sendVerificationEmail(user, req.headers.host)
+    .then(() => {
+        return res.status(201).json({ message: "Verification resent to " + user.email });
+    })
+    .catch(error => {
+        console.log("sendVerificationEmail Failed: " + error.message);
+        return res.status(400).json({ message: "Failed to send email to " + email});
+    });
 }
 
 // NOTE: need endpoints for: getting user info and editing a user  
