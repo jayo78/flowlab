@@ -60,13 +60,13 @@ const userLogin = async (req, res) => {
 
     const user = await User.findOne({ email: email });
     if (!user) {
-        return res.status(400).json({ message: "Email not found" });
+        return res.status(400).json({ message: "Invalid email or password" });
     }
 
     // NOTE: want to differentiate this 400 so frontend can redirect to resend page rather than printing default error page
-    if (!user.isVerified) {
-        return res.status(400).json({ message: "User not verified"});
-    }
+    // if (!user.isVerified) {
+    //     return res.status(400).json({ message: "User not verified"});
+    // }
 
     if (await user.matchPassword(password)) {
         return res.status(201).json({
@@ -77,7 +77,7 @@ const userLogin = async (req, res) => {
             token: generateJWT(user._id),
         });
     } else {
-        return res.status(400).json({ messsage: "Password doesn't match" });
+        return res.status(400).json({ message: "Invalid email or password" });
     }
 };
 
@@ -90,6 +90,7 @@ const userRegister = async (req, res) => {
     const userExists = await User.findOne({ email: email });
 
     if (userExists) {
+        console.log("email already exists")
         return res.status(400).json({ email: "Email already exists"});
     }
 
@@ -161,14 +162,12 @@ const resendVerification = async (req, res) => {
         return res.status(200).json({ message: "Email verified" });
     }
 
-    sendVerificationEmail(user, req.headers.host)
-    .then(() => {
-        return res.status(201).json({ message: "Verification resent to " + user.email });
-    })
-    .catch(error => {
-        console.log("sendVerificationEmail Failed: " + error.message);
-        return res.status(400).json({ message: "Failed to send email to " + email});
-    });
+    let error = await sendVerificationEmail(user, req.headers.host);
+    if (error) {
+        return res.status(500).json({ message: "Internal Error" });
+    } else {
+        return res.status(201).json({ message: "Verification resent to " + user.email});
+    }
 }
 
 // NOTE: need endpoints for: getting user info and editing a user  
