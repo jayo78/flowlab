@@ -64,6 +64,7 @@ const userLogin = async (req, res) => {
     }
 
     // NOTE: want to differentiate this 400 so frontend can redirect to resend page rather than printing default error page
+    // NOTE: use a 302 status code to redirect
     // if (!user.isVerified) {
     //     return res.status(400).json({ message: "User not verified"});
     // }
