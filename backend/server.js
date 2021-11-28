@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoute");
@@ -16,6 +15,19 @@ app.use("/api/users", userRoute);
 // DB Config
 const db = require("./config/keys").mongoURI;
 
+console.log(db)
+
+/*
+const {
+    MONGO_HOSTNAME,
+    MONGO_PORT
+} = process.env;
+
+const db = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}`
+
+console.log(db)
+*/
+
 // Connect to MongoDB
 mongoose
   .connect(
@@ -26,4 +38,4 @@ mongoose
   .catch(err => console.log(err));
 
 const port = process.env.PORT || 4000; // process.env.port is Heroku's port if you choose to deploy the app there
-app.listen(port, () => console.log(`Server up and running on port ${port} !`));
+app.listen(port, '0.0.0.0', () => console.log(`Server up and running on port ${port} !`));
