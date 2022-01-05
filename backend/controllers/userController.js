@@ -4,10 +4,8 @@ const crypto = require("crypto");
 
 const User = require("../models/User");
 const Token = require("../models/Token");
-const { builtinModules } = require("module");
 
 require("dotenv").config();
-
 
 // ================ Helpers ==>>
 
@@ -22,9 +20,9 @@ const generateJWT = (id) => {
 const generateVerificationToken = (id) => {
     return new Token({
         userId: id,
-        token: crypto.randomBytes(16).toString('hex')
-    }); 
-}
+        token: crypto.randomBytes(16).toString("hex"),
+    });
+};
 
 const sendVerificationEmail = async (user, host) => {
     let newToken = generateVerificationToken(user._id);
@@ -35,20 +33,19 @@ const sendVerificationEmail = async (user, host) => {
         from: process.env.EMAIL_SENDER,
         to: user.email,
         subject: "Account Verification",
-        text: "Hello " + user.name + ",\n\n" + "Verify your account here: " + link
+        text: "Hello " + user.name + ",\n\n" + "Verify your account here: " + link,
     });
-}
+};
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    secure: true, 
+    service: "gmail",
+    secure: true,
     socketTimeout: 5000,
     auth: {
         user: process.env.EMAIL_SENDER,
-        pass: process.env.EMAIL_PASS
-    }
+        pass: process.env.EMAIL_PASS,
+    },
 });
-
 
 // ================ Endpoints for routes ==>>
 
@@ -91,32 +88,32 @@ const userRegister = async (req, res) => {
     const userExists = await User.findOne({ email: email });
 
     if (userExists) {
-        console.log("email already exists")
-        return res.status(400).json({ email: "Email already exists"});
+        console.log("email already exists");
+        return res.status(400).json({ email: "Email already exists" });
     }
 
     const newUser = await User.create({
         name: name,
         email: email,
-        password: password
+        password: password,
     });
-   
+
     if (newUser) {
         // NOTE: Delete user account if verification sending fails? invalid email right?
         sendVerificationEmail(newUser, req.headers.host)
-        .then(() => {
-            return res.status(201).json({
-                _id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-                isVerified: newUser.isVerified,
-                token: generateJWT(newUser._id),
+            .then(() => {
+                return res.status(201).json({
+                    _id: newUser._id,
+                    name: newUser.name,
+                    email: newUser.email,
+                    isVerified: newUser.isVerified,
+                    token: generateJWT(newUser._id),
+                });
+            })
+            .catch((error) => {
+                console.log("sendVerificationEmail Failed: " + error.message);
+                return res.status(400).json({ message: "Failed to send email to " + email });
             });
-        })
-        .catch(error => {
-            console.log("sendVerificationEmail Failed: " + error.message);
-            return res.status(400).json({ message: "Failed to send email to " + email});
-        });
     } else {
         return res.status(500).json({ message: "Internal Error" });
     }
@@ -126,11 +123,13 @@ const userRegister = async (req, res) => {
 // desc: verify a user found from a given token
 const verifyUser = async (req, res) => {
     const { token } = req.params;
-    console.log("verifying: " + token)
+    console.log("verifying: " + token);
 
     const userToken = await Token.findOne({ token: token });
     if (!userToken) {
-        return res.status(400).json({ message: "Unable to find valid token. Your token could be expired" });
+        return res
+            .status(400)
+            .json({ message: "Unable to find valid token. Your token could be expired" });
     }
 
     const user = await User.findOne({ _id: userToken.userId });
@@ -146,7 +145,7 @@ const verifyUser = async (req, res) => {
         } else {
             return res.status(200).json({ message: "Email verified" });
         }
-    })
+    });
 };
 
 // endpoint: POST /api/resend
@@ -167,15 +166,15 @@ const resendVerification = async (req, res) => {
     if (error) {
         return res.status(500).json({ message: "Internal Error" });
     } else {
-        return res.status(201).json({ message: "Verification resent to " + user.email});
+        return res.status(201).json({ message: "Verification resent to " + user.email });
     }
-}
+};
 
-// NOTE: need endpoints for: getting user info and editing a user  
+// NOTE: need endpoints for: getting user info and editing a user
 
 module.exports = {
-    userRegister, 
-    userLogin, 
-    verifyUser, 
-    resendVerification
+    userRegister,
+    userLogin,
+    verifyUser,
+    resendVerification,
 };

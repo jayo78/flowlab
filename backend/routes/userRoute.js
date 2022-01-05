@@ -15,8 +15,7 @@ const {
 // Im pretty sure with middleware we could auth and verify before passing to controller like this:
 // router.post("/endpoint", validateMiddlewear, authMiddlewear, controller)
 
-router.route("/")
-    .post(userRegister);
+router.post("/", userRegister);
 
 /*
 router.route("/sample")
