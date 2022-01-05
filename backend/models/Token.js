@@ -1,26 +1,27 @@
 const mongoose = require("mongoose");
 
 // token that references a specific user, token field should be a unique string
-// used for email verification and password resets 
+// used for email verification and password resets
 const tokenSchema = mongoose.Schema({
-    userId: { 
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'User' 
+        ref: "User",
     },
-  
-    token: { 
-        type: String, 
-        required: true 
-    },
-  
-    createdAt: { 
-        type: Date, 
+
+    token: {
+        type: String,
         required: true,
-        default: Date.now, 
-        expires: 86400000 
-  }
+    },
+
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now,
+        expires: 86400000,
+    },
 });
 
 Token = mongoose.model("tokens", tokenSchema);
 module.exports = Token;
+

@@ -9,17 +9,16 @@ const LoginScreen = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    // const location = useLocation();
 
-    // subscribes to state updates
+    // subscribes to state updates to userLogin
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo, error } = userLogin;
-    // console.log(userInfo);
 
     useEffect(() => {
         if (error)
             console.log(error)
         if (userInfo) {
+            console.log(userInfo);
             navigate("/dashboard");
         }
     }, [userInfo]);
@@ -28,7 +27,6 @@ const LoginScreen = () => {
         e.preventDefault();
         dispatch(login(email, password));
     };
-
 
     return (
         <section>
