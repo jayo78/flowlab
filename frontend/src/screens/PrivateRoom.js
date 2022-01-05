@@ -61,20 +61,25 @@ const PrivateRoomScreen = () => {
     }, [participantInfo]);
 
     return (
-        <div className="outerContainer">
-            {participantInfo && (
-                <div className="innerContainer">
-                    <h3>In Room: {participantInfo.roomID}</h3>
-                    <div>
-                        <Feed roomID={participantInfo.roomID} socket={socket} />
-                    </div>
-                    <div>
-                        <button onClick={handleSendMessage}>Send Message</button>
-                        <button onClick={handleLeaveRoom}>Leave</button>
-                    </div>
-                </div>
-            )}
-        </div>
+        <section>
+            {participantInfo && <h3>In Room: {participantInfo.roomID}</h3>}
+            <button onClick={handleSendMessage}>Send Message</button>
+            <button onClick={handleLeaveRoom}>Leave</button>
+        </section>
+        // <div className="outerContainer">
+        // {participantInfo && (
+        // <div className="innerContainer">
+        // <h3>In Room: {participantInfo.roomID}</h3>
+        // <div>
+        // <Feed roomID={participantInfo.roomID} socket={socket} />
+        // </div>
+        // <div>
+        // <button onClick={handleSendMessage}>Send Message</button>
+        // <button onClick={handleLeaveRoom}>Leave</button>
+        // </div>
+        // </div>
+        // )}
+        // </div>
     );
 };
 
