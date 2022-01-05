@@ -170,11 +170,37 @@ const resendVerification = async (req, res) => {
     }
 };
 
-// NOTE: need endpoints for: getting user info and editing a user
+// endpoint: POST /api/edituser
+// desc: edit user info
+const editUserInfo = async(req, res) => {
+    const { name } = req.body;  // in the future, let's look into changing password/email
+
+    if (!name) {    // if all fields null
+        return res.status(400).json( {message: "Can't change user info to null field"})
+    }
+
+    const user = await User.findOne( {email: email} );
+    if (!user) {
+        return res.status(400).json( { message: "Unable to find user" } );
+    }
+
+    const userExists = await User.findOne( {name: name} )
+    if (userExists) {
+        return res.status(400).json( {message: "User with provided name already exists"})
+    }
+
+    user.name = name;
+    await user.save;
+
+    return res.status(201);
+}
+
+// NOTE: need endpoints for: getting user info and editing a user  
 
 module.exports = {
-    userRegister,
-    userLogin,
-    verifyUser,
+    userRegister, 
+    userLogin, 
+    verifyUser, 
     resendVerification,
+    editUserInfo
 };
