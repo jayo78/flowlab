@@ -1,21 +1,37 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-router-dom";
+import React, { useEffect, useContext, useState } from 'react';
+import {
+    Flex,
+    Box,
+    Heading,
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Text,
+    InputGroup,
+    InputRightElement,
+    Link,
+    chakra
+} from '@chakra-ui/react';
+import axios from 'axios';
+import { SocketContext } from '../socketContext';
+import { useSelector } from 'react-router-dom';
 
-const Feed = ({ socket, roomID }) => {
-    const [message, setMessage] = useState("");
+const Feed = ({ roomID }) => {
+    const socket = useContext(SocketContext);
+    const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
     // get all messages from the room
     const getMessages = () => {
         const config = {
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         };
 
         axios
-            .post("/api/rooms/messages", { roomID: roomID }, config)
+            .post('/api/rooms/messages', { roomID: roomID }, config)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -24,37 +40,35 @@ const Feed = ({ socket, roomID }) => {
             });
     };
 
-    const sendMessage = (e) => {
+    const handleSendMessage = (e) => {
         e.preventDefault();
-
         if (message) {
-            socket.emit("sendMessage", message);
-            setMessage("");
+            console.log('sending message');
+            socket.emit('sendMessage', message);
+            setMessage('');
         }
     };
 
     // on mount get all previous messages and setup socket handlers
     useEffect(() => {
-        getMessages();
-        socket.on("message", (message) => {
-            console.log("recved message");
+        // getMessages();
+        socket.on('message', (message) => {
+            console.log('recved message');
             setMessages((messages) => [...messages, message]);
         });
     }, []);
 
     return (
-        <p>feed</p>
-        // <div>
-        // <div>
-        // <div>
-        // {messages.map((message, i) => (
-        // <div key={i}>
-        // <p>{message}</p>
-        // </div>
-        // )}
-        // </div>
-        // </div>
-        // </div>
+        <Flex height="100%" direction="column" justifyContent="end">
+            <chakra.form onSubmit={handleSendMessage}>
+                <FormControl>
+                    <Input mb={5} type="text" placeholder="message"></Input>
+                    <InputRightElement>
+                        <Button>Send</Button>
+                    </InputRightElement>
+                </FormControl>
+            </chakra.form>
+        </Flex>
     );
 };
 

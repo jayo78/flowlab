@@ -61,9 +61,15 @@ const joinRoom = async (req, res) => {
     console.log("participant join");
     console.log(newParticipant);
 
-    // add participant to room in rooms map
-    if (!participantInRoom(roomID, newParticipant._id))
-        addParticipant(roomID, newParticipant._id);
+    // NOTE: if fail to add participant to room, the newParticipant object was still created
+    // and just not returned
+
+    // attempt to add the new participant to the room
+    if (participantInRoom(roomID, newParticipant._id))
+        return res.status(400).json({ message: "already in room" });
+
+    if (!addParticipant(roomID, newParticipant._id))
+        return res.status(400).json({ message: "room at capacity" });
 
     return res.status(201).json({
         _id: newParticipant._id,
