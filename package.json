@@ -11,22 +11,36 @@
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
+  "lint": "eslint .",
+  "lint:fix": "eslint --fix",
+  "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
   "license": "ISC",
   "dependencies": {
+    "@chakra-ui/icons": "^1.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "concurrently": "^6.4.0",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.2.0",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "nodemailer": "^6.7.0",
+    "nodemon": "^2.0.15",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
+    "prettier": "^2.5.1",
     "react-router-dom": "^6.0.0-beta.8",
+    "socket.io": "^4.4.0",
+    "socket.io-client": "^4.4.0",
     "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "eslint-plugin-react": "^7.28.0"
   }
 }
