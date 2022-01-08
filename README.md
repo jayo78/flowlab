@@ -9,5 +9,7 @@
 
 ### Docker 
 
+- go to flowlab directory
 - start app `docker-compose up --build`
 - remove containers from above `docker-compose down -v`
+- remove all generated artifacts with 'docker system prune'
