@@ -5,22 +5,25 @@ import RegisterScreen from "./screens/RegisterScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import PrivateRoomScreen from "./screens/PrivateRoom";
+import { ChakraProvider } from "@chakra-ui/react";
 
 function App() {
     return (
-        <Router>
-            <main>
-                <div>
-                    <Routes>
-                        <Route exact path="/login" element={<LoginScreen />} />
-                        <Route exact path="/signup" element={<RegisterScreen />} />
-                        <Route exact path="/dashboard" element={<DashboardScreen />} />
-                        <Route path="room/:roomID" element={<PrivateRoomScreen />} />
-                        <Route path="/" element={<WelcomeScreen />} />
-                    </Routes>
-                </div>
-            </main>
-        </Router>
+        <ChakraProvider>
+            <Router>
+                <main>
+                    <div>
+                        <Routes>
+                            <Route exact path="/login" element={<LoginScreen />} />
+                            <Route exact path="/signup" element={<RegisterScreen />} />
+                            <Route exact path="/dashboard" element={<DashboardScreen />} />
+                            <Route path="room/:roomID" element={<PrivateRoomScreen />} />
+                            <Route path="/" element={<WelcomeScreen />} />
+                        </Routes>
+                    </div>
+                </main>
+            </Router>
+        </ChakraProvider>
     );
 }
 

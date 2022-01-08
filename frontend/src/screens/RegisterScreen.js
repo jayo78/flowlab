@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+    chakra,
+    Flex,
+    Box,
+    Heading,
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    CircularProgress,
+    Text,
+    InputGroup,
+    InputRightElement,
+    Link,
+} from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
 
@@ -7,11 +23,14 @@ const RegisterScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const submitHandler = (e) => {
+    const handlePasswordVisibility = () => setShowPassword(!showPassword);
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(register(email, password, name));
     };
@@ -26,58 +45,62 @@ const RegisterScreen = () => {
     }, [userInfo]);
 
     return (
-        <section>
-            <div>
-                <div>
-                    {error && <p style={{color: 'red'}}>{error.message}</p>}
-                    <h2>Sign Up</h2>
-                    <form onSubmit={submitHandler}>
-                        <div>
-                            <label>Email Address</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+        <Flex position="fixed" mt={50} width="full" align="center" justifyContent="center">
+            <Box m={8} p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
+                <Box textAlign="center">
+                    <Heading>Sign Up</Heading>
+                </Box>
+                <Box my={4} textAlign="left">
+                    <chakra.form onSubmit={handleSubmit}>
+                        {error && <ErrorMessage message={error} />}
+                        <FormControl>
+                            <FormLabel mb={2}>Email</FormLabel>
+                            <Input
+                                type="email" 
+                                placeholder="email"
+                                size="lg"
+                                onChange={((e) => setEmail(e.target.value))}
                             />
-                        </div>
-
-                        <div>
-                            <label>Password</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => {setPassword(e.target.value)}}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel mt={3} mb={2}>Name</FormLabel>
+                            <Input
+                                type="text" 
+                                placeholder="name"
+                                size="lg"
+                                onChange={((e) => setName(e.target.value))}
                             />
-                        </div>
-
-                        <div>
-                            <label>Name</label>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => {setName(e.target.value)}}
-                            />
-                        </div>
-
-                        <button>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel mt={3} mb={2}>Password</FormLabel>
+                            <InputGroup>
+                                <Input
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="password"
+                                    size="lg"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <InputRightElement p={5} height="3rem" width="3rem">
+                                    <Box onClick={handlePasswordVisibility} cursor="pointer">
+                                        {showPassword ? (
+                                        <ViewIcon/>
+                                        ) : (
+                                        <ViewOffIcon/>
+                                        )}
+                                    </Box>
+                                </InputRightElement>
+                            </InputGroup>
+                        </FormControl>
+                        <Button colorScheme="teal" variant="outline" type="submit" width="full" mt={4}>
                             Sign Up
-                        </button>
-
-                        <p>
-                            Already have an account?
-                            <Link to="/login">
-                                Login 
-                            </Link>
-                        </p>
-                    </form>
-                </div>
-
-            </div>
-            <div>
-
-            </div>
-
-        </section> 
+                        </Button>
+                    </chakra.form>
+                    <Text mt={2} align="center" fontSize="xs">
+                        Already have an account? <Link color="teal" href="login">Login</Link>
+                    </Text>
+                </Box>
+            </Box>
+        </Flex>
     );
 }
 
