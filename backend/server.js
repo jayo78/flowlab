@@ -8,6 +8,7 @@ const io = new Server(server);
 const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoute");
 const roomRoute = require("./routes/roomRoute");
+const handler = require("./iohandler");
 
 // Middleware Config
 app.use(express.json());
@@ -28,20 +29,7 @@ mongoose
 // Server Config
 const port = process.env.PORT || 4000;
 
-io.on("connection", (socket) => {
-    console.log("client connected");
-    socket.on("disconnect", () => {
-        console.log("client disconnect");
-    });
-
-    socket.on("join", ({ name, room }) => {
-        console.log(name + " joined room " + room);
-    });
-
-    socket.on("sendMessage", (message) => {
-        console.log("sent message: " + message);
-    });
-});
+io.on("connection", handler);
 
 server.listen(port, "0.0.0.0");
 server.on("listening", () => {

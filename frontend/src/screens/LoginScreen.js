@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
     Flex,
     Box,
@@ -10,16 +10,17 @@ import {
     Text,
     InputGroup,
     InputRightElement,
-    Link
-} from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../actions/userActions';
+    Link,
+} from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userActions";
+import ErrorMessage from "../components/ErrorMessage";
 
 const LoginScreen = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const LoginScreen = () => {
         if (error) console.log(error);
         if (userInfo) {
             console.log(userInfo);
-            navigate('/dashboard');
+            navigate("/dashboard");
         }
     }, [userInfo]);
 
@@ -68,7 +69,7 @@ const LoginScreen = () => {
                             </FormLabel>
                             <InputGroup>
                                 <Input
-                                    type={showPassword ? 'text' : 'password'}
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="password"
                                     size="lg"
                                     onChange={(e) => setPassword(e.target.value)}
@@ -85,12 +86,13 @@ const LoginScreen = () => {
                             variant="outline"
                             type="submit"
                             width="full"
-                            mt={4}>
+                            mt={4}
+                        >
                             Login
                         </Button>
                     </form>
                     <Text mt={2} align="center" fontSize="xs">
-                        Don't have an account?{' '}
+                        Don't have an account?{" "}
                         <Link color="teal" href="signup">
                             Sign Up
                         </Link>

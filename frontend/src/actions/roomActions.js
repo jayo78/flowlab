@@ -1,7 +1,28 @@
 import axios from "axios";
-import { ROOM_LEAVE, ROOM_JOIN_FAIL, ROOM_JOIN_SUCCESS } from "../constants/roomConstants";
+import {
+    ROOM_LEAVE,
+    ROOM_PARTICIPANT_FAIL,
+    ROOM_PARTICIPANT_SUCCESS,
+} from "../constants/roomConstants";
 
-export const joinRoom = (roomID, userID, name) => (dispatch) => {
+// const callCreateParticipantAPI = async (roomID, userID, name) => {
+// const config = {
+// headers: {
+// "Content-Type": "application/json",
+// },
+// };
+
+// axios
+// .post("/api/rooms/participants", { roomID, userID, name }, config)
+// .then((res) => {
+// return res.data;
+// })
+// .catch((error) => {
+// throw Error(error.response.data);
+// });
+// };
+
+export const createParticipant = (roomID, userID, name) => (dispatch) => {
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -9,24 +30,20 @@ export const joinRoom = (roomID, userID, name) => (dispatch) => {
     };
 
     axios
-        .post("/api/rooms/join", { roomID, userID, name }, config)
+        .post("/api/rooms/participants", { roomID, userID, name }, config)
         .then((res) => {
+            localStorage.setItem("participantInfo", JSON.stringify(res.data));
+
             dispatch({
-                type: ROOM_JOIN_SUCCESS,
+                type: ROOM_PARTICIPANT_SUCCESS,
                 payload: res.data,
             });
-
-            localStorage.setItem("participantInfo", JSON.stringify(res.data));
         })
         .catch((error) => {
-            if (error.response) {
-                dispatch({
-                    type: ROOM_JOIN_FAIL,
-                    payload: error.response.data,
-                });
-            } else {
-                console.log(error);
-            }
+            dispatch({
+                type: ROOM_PARTICIPANT_FAIL,
+                payload: error.response.data,
+            });
         });
 };
 

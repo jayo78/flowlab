@@ -10,6 +10,8 @@ let CAPACITY = 4;
 //
 // return whether a participant is in a room
 const participantInRoom = (roomID, participantID) => {
+    console.log("[Rooms] check " + participantID + " in room " + roomID);
+    console.log(rooms);
     if (!rooms.has(roomID)) return false;
 
     let participantList = rooms.get(roomID);
@@ -17,18 +19,18 @@ const participantInRoom = (roomID, participantID) => {
 };
 
 const addParticipant = (roomID, participantID) => {
-    console.log("adding participant " + participantID + " to room " + roomID);
-    if (!rooms.has(roomID)) {
+    console.log("[Rooms] adding participant " + participantID + " to room " + roomID);
+    if (!roomExists(roomID)) {
         console.log("failed: room doesn't exist");
         return false;
     }
 
-    let participantList = rooms.get(roomID);
-    if (participantList.length >= CAPACITY) {
+    if (!roomHasSpace(roomID)) {
         console.log("failed: list full");
         return false;
     }
 
+    let participantList = rooms.get(roomID);
     participantList.push(participantID);
     rooms.set(roomID, participantList);
     return true;
@@ -46,9 +48,11 @@ const removeParticipant = (roomID, participantID) => {
 };
 
 const addRoom = (roomID) => {
-    console.log("adding new room " + roomID);
+    console.log("[Rooms] adding new room " + roomID);
+    console.log(rooms);
     // set new room to empty participant list
     rooms.set(roomID, []);
+    console.log(rooms);
 };
 
 const removeRoom = (roomID) => {
@@ -59,30 +63,33 @@ const removeRoom = (roomID) => {
     return true;
 };
 
-const connectionHandler = (socket) => {
-    // auth middleware
+const roomExists = (roomID) => {
+    return rooms.get(roomID) != null;
+};
 
-    socket.on("disconnect", () => {
-        console.log("disconnected");
-        // handle disconnect
-    });
+const roomHasSpace = (roomID) => {
+    return rooms.get(roomID).length < CAPACITY;
+};
 
-    socket.on("sendMessage", (message) => {
-        console.log("sendMessage" + message);
-        // handle message
-    });
+const getOpenRoom = () => {
+    console.log("[Rooms] getOpenRoom");
+    for (let [roomID, list] of rooms.entries()) {
+        if (list.length < CAPACITY) {
+            console.log("open room found: " + roomID);
+            return roomID;
+        }
+    }
 
-    socket.on("test", () => {
-        console.log(`recved test from socket ${socket}`);
-        socket.emit("test", "test recved");
-    });
+    return null;
 };
 
 module.exports = {
-    connectionHandler,
     participantInRoom,
+    roomHasSpace,
+    roomExists,
     removeParticipant,
     addParticipant,
     removeRoom,
+    getOpenRoom,
     addRoom,
 };

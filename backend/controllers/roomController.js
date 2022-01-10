@@ -4,6 +4,9 @@ const Room = require("../models/Room");
 const {
     addRoom,
     addParticipant,
+    roomHasSpace,
+    roomExists,
+    getOpenRoom,
     removeRoom,
     removeParticipant,
     participantInRoom,
@@ -14,81 +17,108 @@ const {
  * rooms created by users should always be private
  * */
 const createRoom = async (req, res) => {
+    console.log("[Controller] createRoom");
     let { userID } = req.body;
 
+    //
+    // validate
     const userExists = await User.findOne({ _id: userID });
     if (!userExists) {
-        console.log("createRoom: user not found");
+        console.log("[Controller] createRoom: user not found");
         return res.status(400).json({ message: "user not found" });
     }
 
-    const newRoom = await Room.create({
+    //
+    // create the room, add to map, and then return it
+    Room.create({
         creator_id: userID,
         type: "private",
-    });
-
-    console.log("room created");
-    console.log(newRoom);
-
-    // add room to rooms map
-    addRoom(newRoom._id.toString());
-
-    return res.status(201).json({
-        _id: newRoom._id,
-        creator_id: newRoom.creator_id,
-        type: newRoom.type,
+    }).then((newRoom) => {
+        console.log("[Controller] room created");
+        console.log(newRoom);
+        addRoom(newRoom._id.toString());
+        return res.status(201).json({
+            _id: newRoom._id.toString(),
+            creator_id: newRoom.creator_id,
+            type: newRoom.type,
+        });
     });
 };
 
-// can join room as anon participant or reference an authed user
-const joinRoom = async (req, res) => {
+// can create anon participant or reference an authed user
+const createParticipant = async (req, res) => {
+    console.log("[Controller] createParticipant");
     let { roomID, userID, name } = req.body;
 
-    const room = await Room.findOne({ _id: roomID });
-    if (!room) {
-        console.log("room not found");
+    //
+    // validate
+    if (!roomExists(roomID)) {
+        console.log("[Controller] room not found");
         return res.status(400).json({ message: "room not found" });
     }
 
-    const user = await User.findOne({ _id: userID });
-    const newParticipant = await Participant.create({
+    if (!roomHasSpace(roomID)) {
+        console.log("[Controller] room full");
+        return res.status(400).json({ message: "room full" });
+    }
+
+    if (userID) {
+        // only check user if it is provided
+        const userExists = await User.findOne({ _id: userID });
+        if (!userExists) {
+            console.log("[Controller] user not found");
+            return res.status(400).json({ message: "user not found" });
+        }
+    }
+
+    //
+    // create the participant, add to map, and then return it
+    Participant.create({
         name: name,
-        anon: user == null,
+        anon: userID == null,
         roomID: roomID,
         userID: userID,
-    });
-
-    console.log("participant join");
-    console.log(newParticipant);
-
-    // NOTE: if fail to add participant to room, the newParticipant object was still created
-    // and just not returned
-
-    // attempt to add the new participant to the room
-    if (participantInRoom(roomID, newParticipant._id))
-        return res.status(400).json({ message: "already in room" });
-
-    if (!addParticipant(roomID, newParticipant._id))
-        return res.status(400).json({ message: "room at capacity" });
-
-    return res.status(201).json({
-        _id: newParticipant._id,
-        name: newParticipant.name,
-        anon: newParticipant.anon,
-        roomID: newParticipant.roomID,
-        userID: newParticipant.userID,
+    }).then((newParticipant) => {
+        console.log("participant created");
+        console.log(newParticipant);
+        addParticipant(roomID, newParticipant._id.toString());
+        return res.status(201).json({
+            _id: newParticipant._id.toString(),
+            name: newParticipant.name,
+            anon: newParticipant.anon,
+            roomID: newParticipant.roomID,
+            userID: newParticipant.userID,
+        });
     });
 };
 
-// const getParticipants = async (req, res) => {
+// find an open room or create a new one
+const findRoom = async (req, res) => {
+    console.log("[Controller] findRoom");
 
-// }
-
-// const getTimer = async (req, res) => {
-
-// }
+    let roomID = getOpenRoom();
+    if (!roomID) {
+        // no open rooms
+        Room.create({
+            creator_id: null,
+            type: "public",
+        }).then((newRoom) => {
+            console.log("[Controller] room created");
+            console.log(newRoom);
+            addRoom(newRoom._id.toString());
+            return res.status(201).json({
+                roomID: newRoom._id.toString(),
+            });
+        });
+    } else {
+        return res.status(201).json({
+            roomID: roomID,
+        });
+    }
+};
 
 module.exports = {
     createRoom,
-    joinRoom,
+    createParticipant,
+    findRoom,
 };

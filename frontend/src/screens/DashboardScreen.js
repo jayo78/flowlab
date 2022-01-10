@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Flex, Box, Button } from '@chakra-ui/react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../actions/userActions';
+import React, { useEffect } from "react";
+import { Flex, Box, Button } from "@chakra-ui/react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../actions/userActions";
 
 const DashboardScreen = () => {
     const dispatch = useDispatch();
@@ -15,13 +15,13 @@ const DashboardScreen = () => {
 
     useEffect(() => {
         if (!userInfo) {
-            console.log('logging out');
-            navigate('/login');
+            console.log("logging out");
+            navigate("/login");
         }
         // if participantInfo set then rejoin room
         if (participantInfo) {
-            console.log('redirecting to room');
-            navigate('/room/' + participantInfo.roomID);
+            console.log("redirecting to room");
+            navigate("/room/" + participantInfo.roomID);
         }
         if (error) console.log(error);
     }, [userInfo, participantInfo]);
@@ -33,25 +33,36 @@ const DashboardScreen = () => {
 
     const handleJoinRoom = (e) => {
         e.preventDefault();
-        console.log('joining room');
+        console.log("finding room");
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        axios.get("/api/rooms/").then((res) => {
+            let roomID = res.data.roomID;
+            console.log("got room " + roomID);
+            navigate("/room/" + res.data.roomID);
+        });
     };
 
     const handleCreateRoom = (e) => {
         e.preventDefault();
         const config = {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         };
 
         axios
-            .post('/api/rooms', { userID: userInfo._id }, config)
+            .post("/api/rooms", { userID: userInfo._id }, config)
             .then((res) => {
                 // NOTE: implicit join after room create
                 // by navigating to new link
                 let roomID = res.data._id;
-                console.log('room created: ' + roomID);
-                navigate('/room/' + roomID);
+                console.log("room created: " + roomID);
+                navigate("/room/" + roomID);
             })
             .catch((error) => {
                 if (error.response) {
