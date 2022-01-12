@@ -1,10 +1,10 @@
 import {
     ROOM_PARTICIPANT_SUCCESS,
     ROOM_PARTICIPANT_FAIL,
-    ROOM_LEAVE,
-} from "../constants/roomConstants";
+    ROOM_LEAVE
+} from '../constants/roomConstants';
 
-export const joinRoomReducer = (state = {}, action) => {
+export const createParticipantReducer = (state = {}, action) => {
     switch (action.type) {
         case ROOM_PARTICIPANT_SUCCESS:
             return { participantInfo: action.payload };

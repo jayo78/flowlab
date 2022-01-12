@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Flex, Box, Divider, Button, chakra } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
-import { leaveRoom } from "../actions/roomActions";
-import Room from "../components/Room";
-import { SocketProvider } from "../socketContext";
+import React, { useEffect } from 'react';
+import { Flex, Box, Divider, Button, chakra } from '@chakra-ui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
+import { leaveRoom } from '../actions/roomActions';
+import Room from '../components/Room';
+import { SocketProvider } from '../socketContext';
 
 const RoomScreen = () => {
     const dispatch = useDispatch();
@@ -16,18 +16,19 @@ const RoomScreen = () => {
     const { participantInfo, error } = participantJoin;
 
     const handleLeaveRoom = (e) => {
+        console.log('[RoomScreen] handleLeaveRoom');
         e.preventDefault();
-        console.log("leaving room");
         dispatch(leaveRoom(participantInfo.roomID, participantInfo._id));
-        navigate("/");
+        console.log('\tredirecting to root');
+        navigate('/');
     };
 
     useEffect(() => {
+        console.log('[RoomScreen] mount');
         // participantInfo null on leave or error
         if (!participantInfo) {
-            console.log("no participantInfo");
-            // redirect to dashboard if authed else join
-            navigate("/room/join/" + roomID);
+            console.log('\tredirecting to /room/join/' + roomID);
+            navigate('/room/join/' + roomID);
         }
     }, [participantInfo]);
 
@@ -40,8 +41,7 @@ const RoomScreen = () => {
                     width="25%"
                     position="fixed"
                     top="0"
-                    left="0"
-                >
+                    left="0">
                     <Box height="25%">
                         <chakra.h3>In Room: {participantInfo.roomID}</chakra.h3>
                     </Box>

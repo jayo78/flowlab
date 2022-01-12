@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
     chakra,
     Box,
@@ -11,11 +11,11 @@ import {
     useDisclosure,
     VStack,
     IconButton,
-    CloseButton,
-} from "@chakra-ui/react";
+    CloseButton
+} from '@chakra-ui/react';
 
 const NavBar = () => {
-    const bg = useColorModeValue("white", "gray.800");
+    const bg = useColorModeValue('white', 'gray.800');
     const mobileNav = useDisclosure();
 
     return (
@@ -26,8 +26,7 @@ const NavBar = () => {
                         href="/"
                         title="Flowlab Welcome Page"
                         display="flex"
-                        alignItems="center"
-                    >
+                        alignItems="center">
                         <VisuallyHidden>FlowLab</VisuallyHidden>
                     </chakra.a>
                     <chakra.h1 fontSize="xl" fontWeight="medium" ml="2">
@@ -40,24 +39,29 @@ const NavBar = () => {
                         spacing={1}
                         mr={1}
                         color="black.500"
-                        display={{ base: "none", md: "inline-flex" }}
-                    >
-                        <Button variant="ghost">How It Works</Button>
-                        <Button variant="ghost">About</Button>
-                        <Button variant="ghost">
-                            <Link href="signup">Sign In</Link>
-                        </Button>
+                        display={{ base: 'none', md: 'inline-flex' }}>
+                        <Link>
+                            <Button variant="ghost">How It Works</Button>
+                        </Link>
+                        <Link>
+                            <Button variant="ghost">About</Button>
+                        </Link>
+                        <Link href="login">
+                            <Button variant="ghost">Sign In</Button>
+                        </Link>
                     </HStack>
-                    <Button colorScheme="teal" size="sm">
-                        Start Flow
-                    </Button>
+                    <Link>
+                        <Button colorScheme="teal" size="sm">
+                            Start Flow
+                        </Button>
+                    </Link>
 
-                    <Box display={{ base: "inline-flex", md: "none" }}>
+                    <Box display={{ base: 'inline-flex', md: 'none' }}>
                         <IconButton
-                            display={{ base: "flex", md: "none" }}
+                            display={{ base: 'flex', md: 'none' }}
                             aria-label="Open menu"
                             fontSize="20px"
-                            color={useColorModeValue("gray.800", "inherit")}
+                            color={useColorModeValue('gray.800', 'inherit')}
                             variant="ghost"
                             onClick={mobileNav.onOpen}
                         />
@@ -66,7 +70,7 @@ const NavBar = () => {
                             top={0}
                             left={0}
                             right={0}
-                            display={mobileNav.isOpen ? "flex" : "none"}
+                            display={mobileNav.isOpen ? 'flex' : 'none'}
                             flexDirection="column"
                             p={2}
                             pb={4}
@@ -74,8 +78,7 @@ const NavBar = () => {
                             bg={bg}
                             spacing={3}
                             rounded="sm"
-                            shadow="sm"
-                        >
+                            shadow="sm">
                             <CloseButton aria-label="Close menu" onClick={mobileNav.onClose} />
                             <Button w="full" variant="ghost">
                                 How It Works

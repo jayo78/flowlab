@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
     userRegister,
     userLogin,
     verifyUser,
-    resendVerification,
-} = require("../controllers/userController");
+    resendVerification
+} = require('../controllers/userController');
 //const { verifyJWT } = require("../middleware/auth/protect")
 //console.log(verifyJWT)
 // require auth middlewear
@@ -15,7 +15,7 @@ const {
 // Im pretty sure with middleware we could auth and verify before passing to controller like this:
 // router.post("/endpoint", validateMiddlewear, authMiddlewear, controller)
 
-router.post("/", userRegister);
+router.post('/', userRegister);
 
 /*
 router.route("/sample")
@@ -24,9 +24,9 @@ router.route("/sample")
     });
 */
 
-router.post("/login", userLogin);
-router.post("/resend", resendVerification);
-router.get("/verify/:token", verifyUser);
+router.post('/login', userLogin);
+router.post('/resend', resendVerification);
+router.get('/verify/:token', verifyUser);
 /*
 router.get("/sample", verifyToken, (req, res) => {
     res.send("protect test success")
