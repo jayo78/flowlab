@@ -1,6 +1,5 @@
 const result = require('dotenv').config()
 
-
 const {
     MONGO_HOSTNAME,
     MONGO_PORT

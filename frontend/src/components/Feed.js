@@ -21,7 +21,7 @@ const Feed = () => {
         };
 
         axios
-            .post("/api/rooms/messages", { roomID: roomID }, config)
+            .get("/api/rooms/" + participantInfo.roomID + "/messages", config)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -41,14 +41,12 @@ const Feed = () => {
 
     // on mount get all previous messages and setup socket handlers
     useEffect(() => {
-        // getMessages();
+        getMessages();
         socket.on("message", (data) => {
             console.log("recved message" + data);
-            setMessages((messages) => [...messages, data]);
+            // setMessages((messages) => [...messages, data]);
         });
-    }, []);
-
-    return (
+    }, []);hello
         <Flex height="100%" direction="column" justifyContent="end">
             <chakra.form onSubmit={handleSendMessage}>
                 <FormControl>
