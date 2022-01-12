@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { Flex, Box, Button } from "@chakra-ui/react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../actions/userActions";
+import React, { useEffect } from 'react';
+import { Flex, Box, Button } from '@chakra-ui/react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../actions/userActions';
 
 const DashboardScreen = () => {
     const dispatch = useDispatch();
@@ -14,16 +14,17 @@ const DashboardScreen = () => {
     const { participantInfo, error } = participantJoin;
 
     useEffect(() => {
+        console.log('[DashboardScreen] mount');
         if (!userInfo) {
-            console.log("logging out");
-            navigate("/login");
+            console.log('\tlogging out');
+            navigate('/login');
         }
         // if participantInfo set then rejoin room
         if (participantInfo) {
-            console.log("redirecting to room");
-            navigate("/room/" + participantInfo.roomID);
+            console.log('\tredirecting to room');
+            navigate('/room/' + participantInfo.roomID);
         }
-        if (error) console.log(error);
+        if (error) console.error('\terror: ' + error);
     }, [userInfo, participantInfo]);
 
     const handleLogout = (e) => {
@@ -32,44 +33,47 @@ const DashboardScreen = () => {
     };
 
     const handleJoinRoom = (e) => {
+        console.log('[DashboardScreen] handleJoinRoom');
         e.preventDefault();
-        console.log("finding room");
         const config = {
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         };
 
-        axios.get("/api/rooms/").then((res) => {
+        console.log('\tsending findRoom request');
+        axios.get('/api/rooms/').then((res) => {
             let roomID = res.data.roomID;
-            console.log("got room " + roomID);
-            navigate("/room/" + res.data.roomID);
+            console.log('\tgot room ' + roomID);
+            navigate('/room/' + res.data.roomID);
         });
     };
 
     const handleCreateRoom = (e) => {
+        console.log('[DashboardScreen] handleCreateRoom');
         e.preventDefault();
         const config = {
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         };
 
+        console.log('\tsending createRoom request');
         axios
-            .post("/api/rooms", { userID: userInfo._id }, config)
+            .post('/api/rooms', { userID: userInfo._id }, config)
             .then((res) => {
                 // NOTE: implicit join after room create
                 // by navigating to new link
                 let roomID = res.data._id;
-                console.log("room created: " + roomID);
-                navigate("/room/" + roomID);
+                console.log('\troom created: ' + roomID);
+                navigate('/room/' + roomID);
             })
             .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log(error);
-                }
+                let errMsg =
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message;
+                console.log('\terror: ' + errMsg);
             });
     };
 

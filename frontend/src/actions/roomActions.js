@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 import {
     ROOM_LEAVE,
     ROOM_PARTICIPANT_FAIL,
-    ROOM_PARTICIPANT_SUCCESS,
-} from "../constants/roomConstants";
+    ROOM_PARTICIPANT_SUCCESS
+} from '../constants/roomConstants';
 
 // const callCreateParticipantAPI = async (roomID, userID, name) => {
 // const config = {
@@ -25,31 +25,34 @@ import {
 export const createParticipant = (roomID, userID, name) => (dispatch) => {
     const config = {
         headers: {
-            "Content-Type": "application/json",
-        },
+            'Content-Type': 'application/json'
+        }
     };
 
     axios
-        .post("/api/rooms/participants", { roomID, userID, name }, config)
+        .post('/api/rooms/participants', { roomID, userID, name }, config)
         .then((res) => {
-            localStorage.setItem("participantInfo", JSON.stringify(res.data));
+            localStorage.setItem('participantInfo', JSON.stringify(res.data));
 
             dispatch({
                 type: ROOM_PARTICIPANT_SUCCESS,
-                payload: res.data,
+                payload: res.data
             });
         })
         .catch((error) => {
             dispatch({
                 type: ROOM_PARTICIPANT_FAIL,
-                payload: error.response.data,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
             });
         });
 };
 
 export const leaveRoom = (roomID, participantID) => (dispatch) => {
-    localStorage.removeItem("participantInfo");
+    localStorage.removeItem('participantInfo');
     dispatch({
-        type: ROOM_LEAVE,
+        type: ROOM_LEAVE
     });
 };

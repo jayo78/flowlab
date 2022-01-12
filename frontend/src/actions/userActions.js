@@ -27,14 +27,13 @@ export const login = (email, password) => (dispatch) => {
             localStorage.setItem('userInfo', JSON.stringify(res.data));
         })
         .catch((error) => {
-            if (error.response) {
-                dispatch({
-                    type: USER_LOGIN_FAIL,
-                    payload: error.response.data
-                });
-            } else {
-                console.log(error);
-            }
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            });
         });
 };
 
@@ -62,14 +61,18 @@ export const register = (email, password, name) => (dispatch) => {
             localStorage.setItem('userInfo', JSON.stringify(res.data));
         })
         .catch((error) => {
-            if (error.response) {
-                dispatch({
-                    type: USER_REGISTER_FAIL,
-                    payload: error.response.data
-                });
-            } else {
-                console.log(error);
-            }
+            dispatch({
+                type: USER_REGISTER_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+                // type: USER_REGISTER_FAIL,
+                // payload:
+                // error.response && error.response.data.message
+                // ? error.response.data.message
+                // : error.message
+            });
         });
 };
 
@@ -79,4 +82,3 @@ export const logout = () => (dispatch) => {
         type: USER_LOGOUT
     });
 };
-

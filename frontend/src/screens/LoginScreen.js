@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
     Flex,
     Box,
@@ -10,37 +10,43 @@ import {
     Text,
     InputGroup,
     InputRightElement,
-    Link,
-} from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../actions/userActions";
-import ErrorMessage from "../components/ErrorMessage";
+    Link
+} from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../actions/userActions';
+import ErrorMessage from '../components/ErrorMessage';
 
 const LoginScreen = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    // local state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
+    // hooks
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // subscribes to state updates to userLogin
+    // redux - global state store subscription to userLogin
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo, error } = userLogin;
 
+    //
+    // executes on updates to userInfo
     useEffect(() => {
-        if (error) console.log(error);
+        console.log('[LoginScreen] mount');
+        if (error) console.error('\terror ' + error);
         if (userInfo) {
-            console.log(userInfo);
-            navigate("/dashboard");
+            console.log('\tredirecting to dashboard');
+            navigate('/dashboard');
         }
     }, [userInfo]);
 
     const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
     const handleSubmit = (e) => {
+        console.log('[LoginScreen] handleSubmit');
         e.preventDefault();
         dispatch(login(email, password));
     };
@@ -54,7 +60,7 @@ const LoginScreen = () => {
                 <Box my={4} textAlign="left">
                     <form onSubmit={handleSubmit}>
                         {error && <ErrorMessage message={error} />}
-                        <FormControl>
+                        <FormControl isRequired>
                             <FormLabel mb={2}>Email</FormLabel>
                             <Input
                                 type="email"
@@ -63,13 +69,13 @@ const LoginScreen = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
-                        <FormControl>
+                        <FormControl isRequired>
                             <FormLabel mt={3} mb={2}>
                                 Password
                             </FormLabel>
                             <InputGroup>
                                 <Input
-                                    type={showPassword ? "text" : "password"}
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder="password"
                                     size="lg"
                                     onChange={(e) => setPassword(e.target.value)}
@@ -86,13 +92,12 @@ const LoginScreen = () => {
                             variant="outline"
                             type="submit"
                             width="full"
-                            mt={4}
-                        >
+                            mt={4}>
                             Login
                         </Button>
                     </form>
                     <Text mt={2} align="center" fontSize="xs">
-                        Don't have an account?{" "}
+                        Don't have an account?{' '}
                         <Link color="teal" href="signup">
                             Sign Up
                         </Link>

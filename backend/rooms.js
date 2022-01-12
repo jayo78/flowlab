@@ -7,26 +7,26 @@
 let rooms = new Map();
 let CAPACITY = 4;
 
-//
-// return whether a participant is in a room
 const participantInRoom = (roomID, participantID) => {
-    console.log("[Rooms] check " + participantID + " in room " + roomID);
-    console.log(rooms);
-    if (!rooms.has(roomID)) return false;
+    console.log('[Rooms] check ' + participantID + ' in room ' + roomID);
+    if (!rooms.has(roomID)) {
+        console.error('\tfailed: room does not exist');
+        return false;
+    }
 
     let participantList = rooms.get(roomID);
     return participantList.includes(participantID);
 };
 
 const addParticipant = (roomID, participantID) => {
-    console.log("[Rooms] adding participant " + participantID + " to room " + roomID);
+    console.log('[Rooms] adding participant ' + participantID + ' to room ' + roomID);
     if (!roomExists(roomID)) {
-        console.log("failed: room doesn't exist");
+        console.error("\tfailed: room doesn't exist");
         return false;
     }
 
     if (!roomHasSpace(roomID)) {
-        console.log("failed: list full");
+        console.error('\tfailed: list full');
         return false;
     }
 
@@ -37,28 +37,33 @@ const addParticipant = (roomID, participantID) => {
 };
 
 const removeParticipant = (roomID, participantID) => {
-    if (!participantInRoom(roomID, participantID)) return false;
+    console.log('[Rooms] removing participant ' + participantID + ' from room ' + roomID);
+    if (!participantInRoom(roomID, participantID)) {
+        console.error('\tfailed: participant not in room');
+        return false;
+    }
 
-    console.log("removing participant " + participantID + " from room " + roomID);
     let participantList = rooms.get(roomID);
     let idx = participantList.indexOf(participantID);
     participantList.splice(idx, 1);
     rooms.set(roomID, participantList);
+    console.log('\tparticipant removed');
     return true;
 };
 
 const addRoom = (roomID) => {
-    console.log("[Rooms] adding new room " + roomID);
-    console.log(rooms);
+    console.log('[Rooms] adding new room ' + roomID);
     // set new room to empty participant list
     rooms.set(roomID, []);
-    console.log(rooms);
 };
 
 const removeRoom = (roomID) => {
-    if (!rooms.has(roomID)) return false;
+    console.log('[Rooms] removing room ' + roomID);
+    if (!roomExists(roomID)) {
+        console.error('failed: room does not exists');
+        return false;
+    }
 
-    console.log("deleting room " + roomID);
     rooms.delete(roomID);
     return true;
 };
@@ -72,15 +77,24 @@ const roomHasSpace = (roomID) => {
 };
 
 const getOpenRoom = () => {
-    console.log("[Rooms] getOpenRoom");
+    console.log('[Rooms] getOpenRoom');
     for (let [roomID, list] of rooms.entries()) {
         if (list.length < CAPACITY) {
-            console.log("open room found: " + roomID);
+            console.log('\topen room found: ' + roomID);
             return roomID;
         }
     }
 
+    console.log('\tno open room found');
     return null;
+};
+
+const cleanEmptyRooms = () => {
+    for (let [roomID, list] of rooms) {
+        if (list.length <= 0) {
+            rooms.delete(roomID);
+        }
+    }
 };
 
 module.exports = {
@@ -91,5 +105,5 @@ module.exports = {
     addParticipant,
     removeRoom,
     getOpenRoom,
-    addRoom,
+    addRoom
 };
