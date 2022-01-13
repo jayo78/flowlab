@@ -1,12 +1,23 @@
-import React, { useEffect, useContext, useState } from "react";
-import { Flex, FormControl, Input, Button, InputRightElement, chakra } from "@chakra-ui/react";
-import axios from "axios";
-import { SocketContext } from "../socketContext";
-import { useSelector } from "react-redux";
+import React, { useEffect, useContext, useState } from 'react';
+import {
+    Box,
+    Flex,
+    Text,
+    FormControl,
+    Input,
+    Button,
+    InputRightElement,
+    Spacer,
+    chakra
+} from '@chakra-ui/react';
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import { SocketContext } from '../socketContext';
+import { useSelector } from 'react-redux';
 
 const Feed = () => {
     const socket = useContext(SocketContext);
-    const [message, setMessage] = useState("");
+    const [messageContent, setMessageContent] = useState('');
     const [messages, setMessages] = useState([]);
 
     const participantJoin = useSelector((state) => state.participantJoin);
@@ -16,12 +27,12 @@ const Feed = () => {
     const getMessages = () => {
         const config = {
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         };
 
         axios
-            .post("/api/rooms/messages", { roomID: roomID }, config)
+            .post('/api/rooms/messages', { roomID: roomID }, config)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -32,34 +43,40 @@ const Feed = () => {
 
     const handleSendMessage = (e) => {
         e.preventDefault();
-        if (message) {
-            console.log("sending message");
-            socket.emit("sendMessage", { message, participantInfo });
-            setMessage("");
+        if (messageContent) {
+            console.log('sending message');
+            socket.emit('sendMessage', { messageContent, participantInfo });
+            setMessageContent('');
         }
     };
 
     // on mount get all previous messages and setup socket handlers
     useEffect(() => {
         // getMessages();
-        socket.on("message", (data) => {
-            console.log("recved message" + data);
+        socket.on('message', (data) => {
+            console.log('recved message' + data);
             setMessages((messages) => [...messages, data]);
         });
     }, []);
 
     return (
-        <Flex height="100%" direction="column" justifyContent="end">
-            <chakra.form onSubmit={handleSendMessage}>
+        <Flex p={2} height="100%" direction="row" align="end">
+            <chakra.form onSubmit={handleSendMessage} mb={5} w="full">
                 <FormControl>
                     <Input
-                        mb={5}
+                        value={messageContent}
                         type="text"
                         placeholder="message"
-                        onChange={(e) => setMessage(e.target.value)}
+                        onChange={(e) => setMessageContent(e.target.value)}
                     />
                     <InputRightElement>
-                        <Button onClick={handleSendMessage}>Send</Button>
+                        <Button
+                            variant="ghost"
+                            p={1}
+                            colorScheme="purple"
+                            onClick={handleSendMessage}>
+                            <ArrowRightIcon />
+                        </Button>
                     </InputRightElement>
                 </FormControl>
             </chakra.form>
