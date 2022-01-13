@@ -32,7 +32,7 @@ const Feed = () => {
         };
 
         axios
-            .post('/api/rooms/messages', { roomID: roomID }, config)
+            .get("/api/rooms/" + participantInfo.roomID + "/messages", config)
             .then((res) => {
                 setMessages(res.data);
             })

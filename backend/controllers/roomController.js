@@ -20,7 +20,7 @@ const createRoom = async (req, res) => {
     console.log('[roomController] createRoom');
     let { userID } = req.body;
 
-    //
+    //roomID
     // validate
     const userExists = await User.findOne({ _id: userID });
     if (!userExists) {
@@ -49,7 +49,6 @@ const createParticipant = async (req, res) => {
     console.log('[roomController] createParticipant');
     let { roomID, userID, name } = req.body;
 
-    //
     // validate
     if (!roomExists(roomID)) {
         console.error('\troom not found');
@@ -107,15 +106,32 @@ const findRoom = async (req, res) => {
                 roomID: newRoom._id.toString()
             });
         });
-    } else {
+    } else {    //
         return res.status(201).json({
             roomID: roomID
         });
     }
 };
 
+const getMessages = async (req, res) => {
+    console.log('[roomController] getMessages');
+
+    let roomID = req.params.roomID;
+
+    let room = await Room.findOne({_id: roomID});
+    if (!room) {
+        console.log('getMessages failed, unrecognized roomID');
+        return res.status(404);
+    }
+
+    return res.status(200).json({
+        messages: room.messages
+    });
+};
+
 module.exports = {
     createRoom,
     createParticipant,
-    findRoom
+    findRoom,
+    getMessages
 };

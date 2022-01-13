@@ -2,9 +2,10 @@ const {
     addParticipant,
     participantInRoom,
     removeParticipant,
-    roomExists
+    roomExists,
 } = require('./rooms');
 const Participant = require('./models/Participant');
+const Room = require('./models/Room');
 
 // TODO: add validation/auth as socket middleware
 // NOTE: no error handling - implement (prob with callbacks) so client gets error
@@ -52,16 +53,24 @@ const handler = (socket) => {
         validate(roomID, _id);
         console.log('\t' + _id + ' sent message: ' + data + ' to room: ' + roomID);
 
-        // broadcast message to room
-        socket.to(socket.roomID).emit('message', {
-            name: name,
-            message: message
+        let room = Room.findOne({_id: roomID}).then((room) => {
+            if (!room) {
+                console.error("Room DNE but we try to push a message anyway");
+            }
+            room.messages.push({content: message, participant: _id});
+            room.save().then(() => {
+                // after saving, broadcast message to room
+                socket.to(socket.roomID).emit('message', {
+                    name: name,
+                    message: message
+                });
+                socket.emit('message', {
+                    name: name,
+                    message: message
+                });
+                console.log('\tmessage broadcasted');
+            });
         });
-        socket.emit('message', {
-            name: name,
-            message: message
-        });
-        console.log('\tmessage broadcasted');
     });
 
     socket.on('disconnect', () => {
