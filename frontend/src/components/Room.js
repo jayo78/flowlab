@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Flex, Box } from '@chakra-ui/react';
 import { SocketContext } from '../socketContext';
 import { useSelector } from 'react-redux';
 import Feed from './Feed';
@@ -23,7 +23,23 @@ const Room = () => {
         };
     }, []);
 
-    return <Flex bg="red">{loaded && <Feed />}</Flex>;
+    if (loaded) {
+        return (
+            <Grid w="full" templateRows="repeat(4, 1fr)" templateColumns="repeat(4, 1fr)">
+                <GridItem rowSpan={4} colSpan={1} backgroundColor="white">
+                    <Feed />
+                </GridItem>
+            </Grid>
+        );
+    } else {
+        return (
+            <Box position="relative" width="100%" height="400">
+                <Box position="absolute" top="50%" left="50%">
+                    <Text>Loading</Text>
+                </Box>
+            </Box>
+        );
+    }
 };
 
 export default Room;
