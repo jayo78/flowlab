@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const app = express();
 const http = require("http");
@@ -9,6 +10,7 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoute");
 const roomRoute = require("./routes/roomRoute");
 const handler = require("./iohandler");
+const connectDB = require("./config/db");
 
 // Middleware Config
 app.use(express.json());
@@ -17,21 +19,25 @@ app.use(express.json());
 app.use("/api/users", userRoute);
 app.use("/api/rooms", roomRoute);
 
-// DB Config
-const db = require("./config/keys").mongoURI;
+const rootdir = path.resolve();
+if (process.env.NODE_ENV == "production") {
+    app.use(express.static(path.join(rootdir, "/frontend/build")));
+    app.get("*", (_req, res) => {
+        res.sendFile(path.resolve(rootdir, "frontend", "build", "index.html"));
+    });
+} else {
+    app.get("/", (_req, res) => {
+        res.send("API running");
+    });
+}
 
-// Connect to MongoDB
-mongoose
-    .connect(db)
-    .then(() => console.log("[Server] MongoDB successfully connected"))
-    .catch((err) => console.log(err));
-
-// Server Config
+// server startup
 const port = process.env.PORT || 4000;
 
-io.on("connection", handler);
-
-server.listen(port, "0.0.0.0");
-server.on("listening", () => {
-    console.log(`[Server] Listening on port:: ${port}`);
+server.listen(port, "0.0.0.0", async () => {
+    await connectDB();
+    console.log(`[Server][${process.env.NODE_ENV}] running on port ${process.env.PORT}`);
 });
+
+// io init
+io.on("connection", handler);
