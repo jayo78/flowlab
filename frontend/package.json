@@ -9,6 +9,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.7.4",
+    "@chakra-ui/system": "^1.9.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@testing-library/jest-dom": "^5.11.4",
@@ -29,10 +30,10 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
-    "prettier": "^2.5.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.28.0"
+    "eslint-plugin-react": "^7.28.0",
+    "prettier": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
