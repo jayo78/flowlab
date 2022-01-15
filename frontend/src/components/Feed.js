@@ -97,9 +97,9 @@ const Feed = () => {
                     />
                     <InputRightElement>
                         <Button
-                            variant="ghost"
                             p={1}
-                            colorScheme="#E2E8F0"
+                            bg="transparent"
+                            color="primary"
                             onClick={handleSendMessage}>
                             <ArrowRightIcon />
                         </Button>
