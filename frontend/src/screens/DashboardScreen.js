@@ -80,22 +80,17 @@ const DashboardScreen = () => {
     return (
         <Flex align="center" justifyContent="center">
             <Box p={8} color="white">
-                <Button bg="tomato" m={2} onClick={handleLogout}>
+                <Button bg="secondary" m={2} onClick={handleLogout}>
                     Logout
                 </Button>
-                <Button bg="teal" m={2} onClick={handleCreateRoom}>
+                <Button bg="primary" m={2} onClick={handleCreateRoom}>
                     Create Room
                 </Button>
-                <Button bg="teal" m={2} onClick={handleJoinRoom}>
+                <Button bg="primary" m={2} onClick={handleJoinRoom}>
                     Join Room
                 </Button>
             </Box>
         </Flex>
-        // <section>
-        //     {userInfo && <h3>Hello, {userInfo.name}</h3>}
-        //     <button onClick={handleLogout}>Logout</button>
-        //     <button onClick={handleCreateRoom}>Create Room</button>
-        // </section>
     );
 };
 

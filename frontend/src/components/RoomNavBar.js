@@ -88,7 +88,8 @@ const RoomNavBar = () => {
                     <Button
                         rightIcon={<SmallCloseIcon />}
                         size="sm"
-                        colorScheme="red"
+                        bg="secondary"
+                        color="white"
                         onClick={handleLeaveRoom}>
                         Leave
                     </Button>

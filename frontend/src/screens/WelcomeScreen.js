@@ -57,13 +57,13 @@ const WelcomeScreen = () => {
                         </Text>
                     </Box>
                     <HStack pt="20px" display="flex" justify="center" spacing={2} w="full">
-                        <Button px={10} color="white" bg="#6c75f1">
+                        <Button px={10} color="white" bg="primary">
                             asdf
                         </Button>
                         <Button
                             px={10}
                             border="1px"
-                            borderColor="#6c75f1"
+                            borderColor="primary"
                             variant="ghost"
                             mr={2}>
                             asdf

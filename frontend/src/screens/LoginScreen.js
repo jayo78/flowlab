@@ -88,7 +88,8 @@ const LoginScreen = () => {
                             </InputGroup>
                         </FormControl>
                         <Button
-                            colorScheme="teal"
+                            border="1px"
+                            borderColor="primary"
                             variant="outline"
                             type="submit"
                             width="full"
@@ -97,8 +98,8 @@ const LoginScreen = () => {
                         </Button>
                     </form>
                     <Text mt={2} align="center" fontSize="xs">
-                        {"Don't have an account?"}
-                        <Link color="teal" href="signup">
+                        {"Don't have an account? "}
+                        <Link color="primary" href="signup">
                             Sign Up
                         </Link>
                     </Text>
