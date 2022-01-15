@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
-import { Text, Flex, Box, CircularProgress, Divider, Button, chakra } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Flex, Box } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { leaveRoom } from '../actions/roomActions';
 import Room from '../components/Room';
 import RoomNavBar from '../components/RoomNavBar';
 import ErrorMessage from '../components/ErrorMessage';
+import Loading from '../components/Loading';
 import { SocketProvider } from '../socketContext';
 
 const RoomScreen = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { roomID } = useParams();
     const participantJoin = useSelector((state) => state.participantJoin);
@@ -38,12 +37,9 @@ const RoomScreen = () => {
                     </Flex>
                 </Flex>
             ) : (
-                <Box position="relative" width="100%" height="400">
-                    <Box position="absolute" top="50%" left="50%">
-                        {error && <ErrorMessage>{error}</ErrorMessage>}
-                        <CircularProgress isIndeterminate size="50px" color="teal" />
-                        <Text>Loading</Text>
-                    </Box>
+                <Box>
+                    {error && <ErrorMessage message={error} />}
+                    <Loading />
                 </Box>
             )}
         </Box>

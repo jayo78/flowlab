@@ -6,11 +6,12 @@ import DashboardScreen from './screens/DashboardScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import PreRoomScreen from './screens/PreRoomScreen';
 import RoomScreen from './screens/RoomScreen';
+import customTheme from './theme';
 import { ChakraProvider } from '@chakra-ui/react';
 
 function App() {
     return (
-        <ChakraProvider>
+        <ChakraProvider theme={customTheme}>
             <Router>
                 <main>
                     <div>

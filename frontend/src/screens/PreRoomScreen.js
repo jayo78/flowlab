@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Box, Flex, CircularProgress, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createParticipant } from '../actions/roomActions';
 import ErrorMessage from '../components/ErrorMessage';
+import Loading from '../components/Loading';
 
 const PreRoomScreen = () => {
     const dispatch = useDispatch();
@@ -32,12 +33,9 @@ const PreRoomScreen = () => {
     }, [participantInfo]);
 
     return (
-        <Box position="relative" width="100%" height="400">
-            <Box position="absolute" top="50%" left="50%">
-                {error && <ErrorMessage>{error}</ErrorMessage>}
-                <CircularProgress isIndeterminate size="50px" color="teal" />
-                <Text>Loading</Text>
-            </Box>
+        <Box>
+            <Loading />
+            {error && <ErrorMessage message={error} />}
         </Box>
     );
 };

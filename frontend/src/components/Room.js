@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Grid, GridItem, Text, Flex, Box } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Box } from '@chakra-ui/react';
 import { SocketContext } from '../socketContext';
 import { useSelector } from 'react-redux';
+import Loading from './Loading';
 import Feed from './Feed';
 
 const Room = () => {
@@ -13,11 +14,12 @@ const Room = () => {
     // on mount join the room and wait for response
     useEffect(() => {
         socket.emit('join', { participantInfo });
-        socket.on('participantLoaded', (data) => {
+        socket.on('participantLoaded', () => {
             console.log('\tparticipant loaded');
             setLoaded(true);
         });
 
+        // on unmount disconnect the socket
         return () => {
             socket.disconnect();
         };
@@ -27,8 +29,8 @@ const Room = () => {
         return (
             <Grid w="full" templateRows="repeat(4, 1fr)" templateColumns="repeat(4, 1fr)">
                 <GridItem rowSpan={4} colSpan={1} backgroundColor="white">
-                    <Box w="full" bg="#E2E8F0">
-                        <Text p={2} fontWeight="bold">
+                    <Box w="full" bg="primary">
+                        <Text color="white" p={2} fontWeight="bold">
                             Feed
                         </Text>
                     </Box>
@@ -38,10 +40,8 @@ const Room = () => {
         );
     } else {
         return (
-            <Box position="relative" width="100%" height="400">
-                <Box position="absolute" top="50%" left="50%">
-                    <Text>Loading</Text>
-                </Box>
+            <Box w="full">
+                <Loading />
             </Box>
         );
     }
