@@ -3,7 +3,15 @@ import {
     chakra,
     Box,
     Flex,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverHeader,
+    PopoverBody,
+    PopoverCloseButton,
     Link,
+    Text,
     Menu,
     MenuDivider,
     MenuButton,
@@ -21,12 +29,13 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { leaveRoom } from '../actions/roomActions';
 
 const RoomNavBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const participantJoin = useSelector((state) => state.participantJoin);
     const { participantInfo } = participantJoin;
     const userLogin = useSelector((state) => state.userLogin);
@@ -36,7 +45,7 @@ const RoomNavBar = () => {
     const mobileNav = useDisclosure();
 
     const handleLeaveRoom = (e) => {
-        console.log('[RoomScreen] handleLeaveRoom');
+        console.log('[RoomNavBar] handleLeaveRoom');
         e.preventDefault();
         dispatch(leaveRoom(participantInfo.roomID, participantInfo._id));
         if (userInfo) {
@@ -46,6 +55,12 @@ const RoomNavBar = () => {
             console.log('\tredirecting to root');
             navigate('/');
         }
+    };
+
+    const handleCopy = (e) => {
+        console.log('[RoomNavBar] handleCopy');
+        e.preventDefault();
+        document.execCommand('');
     };
 
     return (
@@ -68,6 +83,14 @@ const RoomNavBar = () => {
                 </Flex>
 
                 <HStack display="flex" alignItems="center" spacing={4}>
+                    <Button
+                        rightIcon={<SmallCloseIcon />}
+                        size="sm"
+                        bg="secondary"
+                        color="white"
+                        onClick={() => {}}>
+                        <Text>Invite Link</Text>
+                    </Button>
                     <Menu closeOnSelect={false}>
                         <MenuButton size="sm" as={Button} rightIcon={<ChevronDownIcon />}>
                             Settings
