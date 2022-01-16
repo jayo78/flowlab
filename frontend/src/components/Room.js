@@ -13,7 +13,6 @@ const Room = () => {
 
     // on mount join the room and wait for response
     useEffect(() => {
-        console.log('[Room] mount');
         socket.emit('join', { participantInfo });
         socket.on('participantLoaded', () => {
             console.log('\tparticipant loaded');

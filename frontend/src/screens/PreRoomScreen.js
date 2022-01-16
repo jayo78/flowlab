@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Flex, Text, Link, Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createParticipant } from '../actions/roomActions';
@@ -33,18 +33,10 @@ const PreRoomScreen = () => {
     }, [participantInfo]);
 
     return (
-        <Flex mt={60} w="100%" direction="column" align="center" justify="center">
-            {error ? (
-                <Box textAlign="center">
-                    <ErrorMessage message={error} />
-                    <Link textDecoration="underline" href="/">
-                        <Text fontSize="12">Go back</Text>
-                    </Link>
-                </Box>
-            ) : (
-                <Loading />
-            )}
-        </Flex>
+        <Box>
+            <Loading />
+            {error && <ErrorMessage message={error} />}
+        </Box>
     );
 };
 
