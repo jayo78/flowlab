@@ -11,15 +11,17 @@ const roomRoute = require("./routes/roomRoute");
 const handler = require("./iohandler");
 const connectDB = require("./config/db");
 
-// Middleware Config
+// middleware Config
 app.use(express.json());
 
-// Routes Config
+// routes Config
 app.use("/api/users", userRoute);
 app.use("/api/rooms", roomRoute);
 
 if (process.env.NODE_ENV == "production") {
     // if production then serve the frontend build
+    let rootdir = path.resolve();
+    app.use(express.static(path.join(rootdir, "/frontend/build")));
     app.get("*", (_req, res) => {
         res.sendFile(path.resolve(rootdir, "frontend", "build", "index.html"));
     });
