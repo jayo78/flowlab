@@ -1,17 +1,13 @@
-const result = require('dotenv').config()
+const result = require("dotenv").config();
 
-const {
-    MONGO_HOSTNAME,
-    MONGO_PORT
-} = process.env;
+const { MONGO_HOSTNAME, MONGO_PORT, MONGO_ATLAS_URI } = process.env;
 
 const dbConnectionURL = {
-    'LOCALURL': `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}`
+    LOCALURL: `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}`,
+    ATLASURL: `${MONGO_ATLAS_URI}`,
 };
 
-
 module.exports = {
-  mongoURI: dbConnectionURL.LOCALURL,
-  //mongoURI: process.env.DB_CONN,
-  secretOrKey: "secret"
+    mongoURI: MONGO_ATLAS_URI ? dbConnectionURL.ATLASURL : dbConnectionURL.LOCALURL,
+    secretOrKey: "secret",
 };

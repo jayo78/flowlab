@@ -3,13 +3,13 @@ version: '3.7'
 services:
   server:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     image: myapp-server
     container_name: myapp-node-server
-    command: nodemon server.js
+    command: npm run server
     volumes:
-      - ./backend/:/usr/src/app
+      - ./:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"

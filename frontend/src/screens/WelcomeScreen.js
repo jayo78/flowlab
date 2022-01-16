@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { leaveRoom } from '../actions/roomActions';
 import NavBar from '../components/NavBar';
-import { Box } from '@chakra-ui/layout';
+import { Heading, Button, HStack, Flex, Box, Text } from '@chakra-ui/react';
 
 const WelcomeScreen = () => {
     const dispatch = useDispatch();
@@ -27,19 +27,49 @@ const WelcomeScreen = () => {
     }, []);
 
     return (
-        <Box >
-        <NavBar />
-            <Box bg="tomato" borderRadius="md" justify-content="center" align="center" mt="60px" ml="100px" mr="100px" p="15px">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit
-                esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui
-                officia deserunt mollit anim id est laborum.
-            </p>
+        <Box>
+            <NavBar />
+            <Box pt="60px" position="relative" overflow="hidden" display="block">
+                <Flex
+                    minHeight="160px"
+                    flexWrap="wrap"
+                    maxWidth="1380px"
+                    flexDirection="column"
+                    borderRadius="md"
+                    p={0}
+                    m="auto"
+                    boxSizing="border-box"
+                    textAlign="center"
+                    justifyContent="space-between"
+                    alignItems="center">
+                    <Heading whiteSpace="pre-line" fontSize="60px" lineHeight="64px">
+                        GenZ Co-working Space
+                    </Heading>
+                    <Box>
+                        <Text
+                            lineHeight="28px"
+                            px={24}
+                            wordBreak="break-word"
+                            color="grey"
+                            fontSize="14">
+                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                            mollit est laborum.
+                        </Text>
+                    </Box>
+                    <HStack pt="20px" display="flex" justify="center" spacing={2} w="full">
+                        <Button px={10} color="white" bg="primary">
+                            asdf
+                        </Button>
+                        <Button
+                            px={10}
+                            border="1px"
+                            borderColor="primary"
+                            variant="ghost"
+                            mr={2}>
+                            asdf
+                        </Button>
+                    </HStack>
+                </Flex>
             </Box>
         </Box>
     );

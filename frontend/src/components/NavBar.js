@@ -19,7 +19,7 @@ const NavBar = () => {
     const mobileNav = useDisclosure();
 
     return (
-        <chakra.header bg={bg} w="full" px={{ base: 2, sm: 4 }} py={4} shadow="md">
+        <chakra.header bg={bg} w="full" px={{ base: 2, sm: 4 }} py={4}>
             <Flex alignItems="center" justifyContent="space-between" mx="auto">
                 <Flex>
                     <chakra.a
@@ -51,7 +51,7 @@ const NavBar = () => {
                         </Link>
                     </HStack>
                     <Link>
-                        <Button colorScheme="teal" size="sm">
+                        <Button color="white" bg="#6c75f1" size="sm">
                             Start Flow
                         </Button>
                     </Link>

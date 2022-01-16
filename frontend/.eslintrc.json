@@ -12,12 +12,13 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 13,
         "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
+        "no-unused-vars": ["warn", { "vars": "local", "args": "after-used", "ignoreRestSiblings": false }],
+        "react/prop-types": ["off"]
     }
 }

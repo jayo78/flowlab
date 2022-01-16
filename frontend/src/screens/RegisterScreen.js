@@ -103,7 +103,8 @@ const RegisterScreen = () => {
                             </InputGroup>
                         </FormControl>
                         <Button
-                            colorScheme="teal"
+                            border="1px"
+                            borderColor="primary"
                             variant="outline"
                             type="submit"
                             width="full"
@@ -113,7 +114,7 @@ const RegisterScreen = () => {
                     </chakra.form>
                     <Text mt={2} align="center" fontSize="xs">
                         Already have an account?{' '}
-                        <Link color="teal" href="login">
+                        <Link color="primary" href="login">
                             Login
                         </Link>
                     </Text>

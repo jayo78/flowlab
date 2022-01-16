@@ -1,5 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import {
+    List,
+    ListItem,
     Box,
     Flex,
     Text,
@@ -11,9 +13,11 @@ import {
     chakra
 } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@chakra-ui/icons';
+import ScrollableFeed from 'react-scrollable-feed';
 import axios from 'axios';
 import { SocketContext } from '../socketContext';
 import { useSelector } from 'react-redux';
+import Message from './Message';
 
 const Feed = () => {
     const socket = useContext(SocketContext);
@@ -32,7 +36,7 @@ const Feed = () => {
         };
 
         axios
-            .get("/api/rooms/" + participantInfo.roomID + "/messages", config)
+            .get('/api/rooms/' + participantInfo.roomID + '/messages', config)
             .then((res) => {
                 setMessages(res.data);
             })
@@ -52,16 +56,38 @@ const Feed = () => {
 
     // on mount get all previous messages and setup socket handlers
     useEffect(() => {
+        console.log('[Feed] mount');
         // getMessages();
         socket.on('message', (data) => {
-            console.log('recved message' + data);
+            let { content, participant, timestamp } = data;
+            let { _id, name } = participant;
+            console.log('\trecved message:');
+            console.log('\tcontent: ' + content + ' from: ' + name + ' at: ' + timestamp);
             setMessages((messages) => [...messages, data]);
         });
     }, []);
 
     return (
-        <Flex p={2} height="100%" direction="row" align="end">
-            <chakra.form onSubmit={handleSendMessage} mb={5} w="full">
+        <Flex h="90vh" direction="column" justify="end">
+            <ScrollableFeed wordBreak="break-word" maxH="100%" display="none">
+                {messages &&
+                    messages.map((data) => {
+                        const { content, participant, timestamp } = data;
+                        const { _id, name } = participant;
+                        const isSelf = participantInfo._id == _id;
+                        return (
+                            <Box key={timestamp}>
+                                <Message
+                                    content={content}
+                                    name={name}
+                                    timestamp={new Date(timestamp).toLocaleTimeString('en-US')}
+                                    isSelf={isSelf}
+                                />
+                            </Box>
+                        );
+                    })}
+            </ScrollableFeed>
+            <chakra.form onSubmit={handleSendMessage} p={2} mt={5} mb={7} w="full">
                 <FormControl>
                     <Input
                         value={messageContent}
@@ -71,9 +97,9 @@ const Feed = () => {
                     />
                     <InputRightElement>
                         <Button
-                            variant="ghost"
                             p={1}
-                            colorScheme="purple"
+                            bg="transparent"
+                            color="primary"
                             onClick={handleSendMessage}>
                             <ArrowRightIcon />
                         </Button>
@@ -83,5 +109,6 @@ const Feed = () => {
         </Flex>
     );
 };
+// <List wordBreak="break-word" overflowY="auto">
 
 export default Feed;

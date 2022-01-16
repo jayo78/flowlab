@@ -28,7 +28,9 @@ const RoomNavBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const participantJoin = useSelector((state) => state.participantJoin);
-    const { participantInfo, error } = participantJoin;
+    const { participantInfo } = participantJoin;
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
 
     const bg = useColorModeValue('white', 'gray.800');
     const mobileNav = useDisclosure();
@@ -37,8 +39,13 @@ const RoomNavBar = () => {
         console.log('[RoomScreen] handleLeaveRoom');
         e.preventDefault();
         dispatch(leaveRoom(participantInfo.roomID, participantInfo._id));
-        console.log('\tredirecting to root');
-        navigate('/');
+        if (userInfo) {
+            console.log('\tredirecting to dashboard');
+            navigate('/dashboard');
+        } else {
+            console.log('\tredirecting to root');
+            navigate('/');
+        }
     };
 
     return (
@@ -47,10 +54,10 @@ const RoomNavBar = () => {
             borderColor="black"
             bg={bg}
             w="full"
-            px={{ base: 2, sm: 4 }}
+            px={{ base: 2, sm: 2 }}
             py={2}
             shadow="md">
-            <Flex alignItems="center" justifyContent="space-between" mx="auto">
+            <Flex alignItems="center" justifyContent="space-between">
                 <Flex>
                     <chakra.a href="/" title="FlowLab Room" display="flex" alignItems="center">
                         <VisuallyHidden>FlowLab</VisuallyHidden>
@@ -62,7 +69,7 @@ const RoomNavBar = () => {
 
                 <HStack display="flex" alignItems="center" spacing={4}>
                     <Menu closeOnSelect={false}>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                        <MenuButton size="sm" as={Button} rightIcon={<ChevronDownIcon />}>
                             Settings
                         </MenuButton>
                         <MenuList minWidth="240px">
@@ -80,7 +87,9 @@ const RoomNavBar = () => {
                     </Menu>
                     <Button
                         rightIcon={<SmallCloseIcon />}
-                        colorScheme="red"
+                        size="sm"
+                        bg="secondary"
+                        color="white"
                         onClick={handleLeaveRoom}>
                         Leave
                     </Button>

@@ -1,28 +1,16 @@
-import React, { useEffect, useContext, useState } from 'react';
-import {
-    Box,
-    Flex,
-    Text,
-    FormControl,
-    Input,
-    Button,
-    InputRightElement,
-    Spacer,
-    chakra
-} from '@chakra-ui/react';
-import { ArrowRightIcon } from '@chakra-ui/icons';
-import axios from 'axios';
-import { SocketContext } from '../socketContext';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { Box, Flex } from '@chakra-ui/react';
 
 const Message = ({ content, timestamp, name, isSelf }) => {
     return (
-        <Box>
-            <Box>
-                {name}
-                {timestamp}
-            </Box>
-            <Box>{content}</Box>
+        <Box p={2} bg={isSelf ? '#F7FAFC' : 'white'} fontSize="14">
+            <Flex justify="space-between">
+                <Box fontWeight="bold">{name}</Box>
+                <Box fontSize="11" color="grey">
+                    {timestamp}
+                </Box>
+            </Flex>
+            <Box wordBreak="break-word">{content}</Box>
         </Box>
     );
 };
