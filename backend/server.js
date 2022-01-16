@@ -6,7 +6,6 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoute");
 const roomRoute = require("./routes/roomRoute");
 const handler = require("./iohandler");
@@ -19,13 +18,13 @@ app.use(express.json());
 app.use("/api/users", userRoute);
 app.use("/api/rooms", roomRoute);
 
-const rootdir = path.resolve();
 if (process.env.NODE_ENV == "production") {
-    app.use(express.static(path.join(rootdir, "/frontend/build")));
+    // if production then serve the frontend build
     app.get("*", (_req, res) => {
         res.sendFile(path.resolve(rootdir, "frontend", "build", "index.html"));
     });
 } else {
+    // not production so API and frontend on separate ports
     app.get("/", (_req, res) => {
         res.send("API running");
     });
@@ -36,7 +35,7 @@ const port = process.env.PORT || 4000;
 
 server.listen(port, "0.0.0.0", async () => {
     await connectDB();
-    console.log(`[Server][${process.env.NODE_ENV}] running on port ${process.env.PORT}`);
+    console.log(`[Server][${process.env.NODE_ENV}] running on port ${port}`);
 });
 
 // io init

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Grid, GridItem, Text, Box } from '@chakra-ui/react';
+import { Grid, Flex, GridItem, Text, Box } from '@chakra-ui/react';
 import { SocketContext } from '../socketContext';
 import { useSelector } from 'react-redux';
 import Loading from './Loading';
@@ -13,7 +13,6 @@ const Room = () => {
 
     // on mount join the room and wait for response
     useEffect(() => {
-        console.log('[Room] mount');
         socket.emit('join', { participantInfo });
         socket.on('participantLoaded', () => {
             console.log('\tparticipant loaded');
@@ -41,9 +40,9 @@ const Room = () => {
         );
     } else {
         return (
-            <Box w="full">
+            <Flex mt={60} justify="center" w="full">
                 <Loading />
-            </Box>
+            </Flex>
         );
     }
 };
