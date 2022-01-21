@@ -1,16 +1,8 @@
 const User = require("../models/User");
 const Participant = require("../models/Participant");
 const Room = require("../models/Room");
-const {
-    addRoom,
-    addParticipant,
-    roomHasSpace,
-    roomExists,
-    getOpenRoom,
-    removeRoom,
-    removeParticipant,
-    participantInRoom,
-} = require("../rooms");
+const Message = require("../models/Message");
+const { addRoom, addParticipant, roomHasSpace, roomExists, getOpenRoom } = require("../rooms");
 
 /*
  * create room is only hit by users and not used when the backend itself is spinning up rooms.
@@ -90,7 +82,7 @@ const createParticipant = async (req, res) => {
 };
 
 // find an open room or create a new one
-const findRoom = async (req, res) => {
+const findRoom = async (_req, res) => {
     console.log("[roomController] findRoom");
 
     let roomID = getOpenRoom();
@@ -107,7 +99,6 @@ const findRoom = async (req, res) => {
             });
         });
     } else {
-        //
         return res.status(201).json({
             roomID: roomID,
         });
@@ -125,8 +116,10 @@ const getMessages = async (req, res) => {
         return res.status(404);
     }
 
+    let messages = await Message.find({ _id: { $in: room.messages } }).populate("participant");
+
     return res.status(200).json({
-        messages: room.messages,
+        messages: messages,
     });
 };
 

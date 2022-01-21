@@ -3,7 +3,6 @@ import {
     chakra,
     Box,
     Flex,
-    Link,
     Menu,
     MenuDivider,
     MenuButton,
@@ -38,7 +37,7 @@ const RoomNavBar = () => {
     const handleLeaveRoom = (e) => {
         console.log('[RoomScreen] handleLeaveRoom');
         e.preventDefault();
-        dispatch(leaveRoom(participantInfo.roomID, participantInfo._id));
+        dispatch(leaveRoom(participantInfo.roomID, participantInfo.pID));
         if (userInfo) {
             console.log('\tredirecting to dashboard');
             navigate('/dashboard');
@@ -69,7 +68,12 @@ const RoomNavBar = () => {
 
                 <HStack display="flex" alignItems="center" spacing={4}>
                     <Menu closeOnSelect={false}>
-                        <MenuButton size="sm" as={Button} rightIcon={<ChevronDownIcon />}>
+                        <MenuButton
+                            bg="#C4C4C4"
+                            color="white"
+                            size="sm"
+                            as={Button}
+                            rightIcon={<ChevronDownIcon />}>
                             Settings
                         </MenuButton>
                         <MenuList minWidth="240px">
