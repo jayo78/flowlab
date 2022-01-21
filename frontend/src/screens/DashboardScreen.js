@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Flex, Box, Button } from '@chakra-ui/react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/userActions';
 
@@ -35,11 +35,6 @@ const DashboardScreen = () => {
     const handleJoinRoom = (e) => {
         console.log('[DashboardScreen] handleJoinRoom');
         e.preventDefault();
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
 
         console.log('\tsending findRoom request');
         axios.get('/api/rooms/').then((res) => {

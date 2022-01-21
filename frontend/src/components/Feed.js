@@ -1,15 +1,11 @@
 import React, { useEffect, useContext, useState } from 'react';
 import {
-    List,
-    ListItem,
     Box,
     Flex,
-    Text,
     FormControl,
     Input,
     Button,
     InputRightElement,
-    Spacer,
     chakra
 } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@chakra-ui/icons';

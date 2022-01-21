@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, Link } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import Room from '../components/Room';
@@ -37,10 +37,16 @@ const RoomScreen = () => {
                     </Flex>
                 </Flex>
             ) : (
-                <Box>
-                    {error && <ErrorMessage message={error} />}
-                    <Loading />
-                </Box>
+                <Flex mt={60} direction="column" justifyContent="center" align="center">
+                    {error ? (
+                        <Box>
+                            <ErrorMessage message={error} />
+                            <Link href="/">Go Back</Link>
+                        </Box>
+                    ) : (
+                        <Loading />
+                    )}
+                </Flex>
             )}
         </Box>
     );
