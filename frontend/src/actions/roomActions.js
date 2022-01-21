@@ -50,7 +50,7 @@ export const createParticipant = (roomID, userID, name) => (dispatch) => {
         });
 };
 
-export const leaveRoom = (roomID, participantID) => (dispatch) => {
+export const leaveRoom = () => (dispatch) => {
     localStorage.removeItem('participantInfo');
     dispatch({
         type: ROOM_LEAVE

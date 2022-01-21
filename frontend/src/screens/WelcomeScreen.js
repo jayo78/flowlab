@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { leaveRoom } from '../actions/roomActions';
 import NavBar from '../components/NavBar';
 import { Heading, Button, HStack, Flex, Box, Text } from '@chakra-ui/react';
@@ -12,7 +11,7 @@ const WelcomeScreen = () => {
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
     const participantJoin = useSelector((state) => state.participantJoin);
-    const { participantInfo, error } = participantJoin;
+    const { participantInfo } = participantJoin;
 
     useEffect(() => {
         console.log('[WelcomeScreen] mount');

@@ -1,15 +1,11 @@
 import React, { useEffect, useContext, useState } from 'react';
 import {
-    List,
-    ListItem,
     Box,
     Flex,
-    Text,
     FormControl,
     Input,
     Button,
     InputRightElement,
-    Spacer,
     chakra
 } from '@chakra-ui/react';
 import { ArrowRightIcon } from '@chakra-ui/icons';
@@ -29,16 +25,12 @@ const Feed = () => {
 
     // get all messages from the room
     const getMessages = () => {
-        const config = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-
+        console.log('[Feed] getMessages');
         axios
-            .get('/api/rooms/' + participantInfo.roomID + '/messages', config)
+            .get('/api/rooms/' + participantInfo.roomID + '/messages')
             .then((res) => {
-                setMessages(res.data);
+                console.log(res.data.messages);
+                setMessages(res.data.messages);
             })
             .catch((error) => {
                 console.log(error);
@@ -57,12 +49,12 @@ const Feed = () => {
     // on mount get all previous messages and setup socket handlers
     useEffect(() => {
         console.log('[Feed] mount');
-        // getMessages();
+        getMessages();
         socket.on('message', (data) => {
-            let { content, participant, timestamp } = data;
+            let { content, participant, createdAt } = data;
             let { _id, name } = participant;
             console.log('\trecved message:');
-            console.log('\tcontent: ' + content + ' from: ' + name + ' at: ' + timestamp);
+            console.log('\tcontent: ' + content + ' from: ' + name + ' at: ' + createdAt);
             setMessages((messages) => [...messages, data]);
         });
     }, []);
@@ -72,15 +64,15 @@ const Feed = () => {
             <ScrollableFeed wordBreak="break-word" maxH="100%" display="none">
                 {messages &&
                     messages.map((data) => {
-                        const { content, participant, timestamp } = data;
+                        const { content, participant, createdAt } = data;
                         const { _id, name } = participant;
                         const isSelf = participantInfo._id == _id;
                         return (
-                            <Box key={timestamp}>
+                            <Box key={createdAt}>
                                 <Message
                                     content={content}
                                     name={name}
-                                    timestamp={new Date(timestamp).toLocaleTimeString('en-US')}
+                                    createdAt={new Date(createdAt).toLocaleTimeString('en-US')}
                                     isSelf={isSelf}
                                 />
                             </Box>

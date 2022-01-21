@@ -2,22 +2,6 @@ const mongoose = require("mongoose");
 
 // const uuidv4 = require("uuid");
 
-const messageSchema = mongoose.Schema(
-    {
-    content: {
-        type: String,
-        required: true,  // insert func to validate 
-                        // content & check room association
-    },
-    participant:  {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Participant"
-    },
-    },
-    { timestamps: true, }
-);
-
 const roomSchema = mongoose.Schema(
     {
         // _id: {
@@ -26,7 +10,12 @@ const roomSchema = mongoose.Schema(
         // },
         type: String,
         creator_id: String,
-        messages: [messageSchema]
+        messages: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Message",
+            },
+        ],
     },
     { timestamps: true }
 );
