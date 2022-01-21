@@ -37,7 +37,7 @@ const RoomNavBar = () => {
     const handleLeaveRoom = (e) => {
         console.log('[RoomScreen] handleLeaveRoom');
         e.preventDefault();
-        dispatch(leaveRoom(participantInfo.roomID, participantInfo._id));
+        dispatch(leaveRoom(participantInfo.roomID, participantInfo.pID));
         if (userInfo) {
             console.log('\tredirecting to dashboard');
             navigate('/dashboard');
