@@ -68,7 +68,12 @@ const RoomNavBar = () => {
 
                 <HStack display="flex" alignItems="center" spacing={4}>
                     <Menu closeOnSelect={false}>
-                        <MenuButton size="sm" as={Button} rightIcon={<ChevronDownIcon />}>
+                        <MenuButton
+                            bg="#C4C4C4"
+                            color="white"
+                            size="sm"
+                            as={Button}
+                            rightIcon={<ChevronDownIcon />}>
                             Settings
                         </MenuButton>
                         <MenuList minWidth="240px">
