@@ -23,6 +23,19 @@ const userSchema = mongoose.Schema(
             required: true,
             default: false,
         },
+        tasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Task'
+            }
+            
+        ],
+        archivedTasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Task'
+            }
+        ],
     },
     { timestamps: true }
 );

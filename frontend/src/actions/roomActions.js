@@ -30,7 +30,7 @@ export const createParticipant = (roomID, userID, name) => (dispatch) => {
     };
 
     axios
-        .post('/api/rooms/participants', { roomID, userID, name }, config)
+        .post('/api/rooms/' + roomID + '/participants', { userID, name }, config)
         .then((res) => {
             localStorage.setItem('participantInfo', JSON.stringify(res.data));
 

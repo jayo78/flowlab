@@ -73,7 +73,8 @@ const userLogin = async (req, res) => {
             name: user.name,
             email: user.email,
             isVerified: user.isVerified,
-            token: generateJWT(user._id)
+            token: generateJWT(user._id),
+            tasks: user.tasks
         });
     } else {
         console.error("\tpassword doesn't match");
@@ -96,7 +97,9 @@ const userRegister = async (req, res) => {
     const newUser = await User.create({
         name: name,
         email: email,
-        password: password
+        password: password,
+        tasks: [],
+        archivedTasks: []
     });
 
     if (newUser) {
@@ -105,7 +108,9 @@ const userRegister = async (req, res) => {
             name: newUser.name,
             email: newUser.email,
             isVerified: newUser.isVerified,
-            token: generateJWT(newUser._id)
+            token: generateJWT(newUser._id),
+            tasks: newUser.tasks,
+            archivedTasks: newUser.tasks
         });
     } else {
         console.error('\tcould not create user');
@@ -228,6 +233,56 @@ const editUserInfo = async (req, res) => {
     });
 };
 
+const addTask = async (req, res) => {
+    console.log('[userController] addTask')
+
+    const userID = req.params.userID;
+    const user = User.findOne({_id: userID});
+
+    if (!user) {
+        console.error('\tuser not found');
+        return res.status(400).json({ message: 'Unable to find user' });
+    }
+
+    console.log(user.tasks)
+    if (!user.tasks) {
+        console.error('\tuser tasks field not found');
+        return res.status(400).json({ message: 'Unable to find tasks reference for user' })
+    }
+
+    // add task to user's tasks field
+    user.tasks.push(newTask);
+
+    return res.status(201).json({
+        _id: newTask._id.toString(),
+        creator_id: newTask.creator_id,
+        name: newTask.name,
+        dateCreated: newTask.dateCreated,
+    });
+}
+
+const getUserTasks = async (req, res) => {
+    console.log("[userController] getUserTasks");
+
+    const userID = req.params.userID;
+    let user = await User.findOne({ _id: userID });
+    if (!user) {
+        return res.status(400).message(`user with provided user ID ${userID} not found`);
+    }
+    if (!user.tasks) {
+        return res.status(400).message(`user with provided user ID ${userID} has no tasks field`);
+    }
+    
+    const _tasks = user.tasks.map((taskID) => {
+        return Task.findOne({ _id: taskID }).then(task => task.json());
+    });
+
+    return res.status(200).json({ 
+        tasks: _tasks 
+    });
+}
+
+
 // NOTE: need endpoints for: getting user info and editing a user
 
 module.exports = {
@@ -235,5 +290,7 @@ module.exports = {
     userLogin,
     verifyUser,
     resendVerification,
-    editUserInfo
+    editUserInfo,
+    addTask,
+    getUserTasks,
 };

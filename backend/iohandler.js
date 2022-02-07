@@ -1,5 +1,6 @@
 const {
     addParticipant,
+    getParticipants,
     participantInRoom,
     removeParticipant,
     roomExists,
@@ -41,9 +42,11 @@ const handler = (socket) => {
         socket.join(roomID);
 
         socket.roomID = roomID;
-        socket.participantID = _id;
+        socket.pID = _id;
         socket.username = name;
+
         socket.emit("participantLoaded");
+        socket.to(roomID).emit("participantJoin", participantInfo);
         console.log("\tparticipant loaded");
     });
 
@@ -84,10 +87,9 @@ const handler = (socket) => {
     socket.on("disconnect", () => {
         console.log("[IOHandler] disconnected");
         socket.leave(socket.roomID);
-        removeParticipant(socket.roomID, socket.participantID);
-        // } else {
-        // // broadcast leave
-        // }
+        removeParticipant(socket.roomID, socket.pID);
+        socket.to(socket.roomID).emit("participantLeave", socket.pID);
+        socket.leave(socket.roomID);
     });
 };
 

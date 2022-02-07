@@ -23,7 +23,6 @@ export const login = (email, password) => (dispatch) => {
                 type: USER_LOGIN_SUCCESS,
                 payload: res.data
             });
-
             localStorage.setItem('userInfo', JSON.stringify(res.data));
         })
         .catch((error) => {

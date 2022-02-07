@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Flex, Box, Button } from '@chakra-ui/react';
+import { Flex, Box, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../actions/userActions';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 
 const DashboardScreen = () => {
     const dispatch = useDispatch();
@@ -72,20 +73,65 @@ const DashboardScreen = () => {
             });
     };
 
+    // const getid = () => {
+    // console.log("bruh");
+    // console.log(userInfo.userID);
+    // return userInfo._id + "";
+    // }
+
+    // const renderTasks = ()  => {
+    // const userID = userInfo._id;
+    // if (!userID) {
+    // return;
+    // }
+
+    // // get user tasks
+    // const tasksArr = userInfo.tasks;
+    // // if tasks empty/null/undefined
+    // if (!tasksArr) {
+    // return (
+    // <Box borderRadius='12px' border='2px' width='80%' align='center' textStyle='bold' height="300px">
+    // <Text fontSize='2xl'>No tasks created!</Text>
+    // </Box>
+    // );
+    // }
+    // const taskObjs = tasksArr.map((taskID) => {
+    // return axios
+    // .get('/api/users/tasks/:' + taskID)
+    // .then((res) => {
+    // res.json()
+    // })
+    // })
+
+    // return (
+    // <HStack>
+    // {taskObjs.map((task) => {
+    // return <Box>
+    // <Text fontSize='2xl'>{task.name}</Text>
+    // <Text>{task.completed ? <CheckIcon /> : <CloseIcon />} :: {task.dateDeadline}</Text>
+    // <Text>{task.description}</Text>
+    // </Box>
+    // })}
+    // </HStack>
+    // );
+    // }
+
     return (
-        <Flex align="center" justifyContent="center">
-            <Box p={8} color="white">
-                <Button bg="secondary" m={2} onClick={handleLogout}>
-                    Logout
-                </Button>
-                <Button bg="primary" m={2} onClick={handleCreateRoom}>
-                    Create Room
-                </Button>
-                <Button bg="primary" m={2} onClick={handleJoinRoom}>
-                    Join Room
-                </Button>
+        <Box align="center" justifyContent="center" flexDir="column" height="100vh">
+            <Box>
+                <Box p={8} color="white">
+                    <Button bg="secondary" m={2} onClick={handleLogout}>
+                        Logout
+                    </Button>
+                    <Button bg="primary" m={2} onClick={handleCreateRoom}>
+                        Create Room
+                    </Button>
+                    <Button bg="primary" m={2} onClick={handleJoinRoom}>
+                        Join Room
+                    </Button>
+                </Box>
             </Box>
-        </Flex>
+        </Box>
     );
 };
 

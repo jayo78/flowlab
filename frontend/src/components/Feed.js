@@ -60,7 +60,7 @@ const Feed = () => {
     }, []);
 
     return (
-        <Flex h="90vh" direction="column" justify="end">
+        <Flex h="calc((85vh - 60px)*.75)" direction="column" justify="end">
             <ScrollableFeed wordBreak="break-word" maxH="100%" display="none">
                 {messages &&
                     messages.map((data) => {
@@ -79,7 +79,7 @@ const Feed = () => {
                         );
                     })}
             </ScrollableFeed>
-            <chakra.form onSubmit={handleSendMessage} p={2} mt={5} mb={7} w="full">
+            <chakra.form onSubmit={handleSendMessage} p={2} mt={12} w="full">
                 <FormControl>
                     <Input
                         value={messageContent}
@@ -101,6 +101,5 @@ const Feed = () => {
         </Flex>
     );
 };
-// <List wordBreak="break-word" overflowY="auto">
 
 export default Feed;

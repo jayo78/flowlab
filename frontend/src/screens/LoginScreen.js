@@ -20,6 +20,7 @@ import ErrorMessage from '../components/ErrorMessage';
 
 const LoginScreen = () => {
     // local state
+    //const [email, set]
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);

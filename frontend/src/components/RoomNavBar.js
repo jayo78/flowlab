@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     chakra,
     Box,
@@ -47,6 +47,16 @@ const RoomNavBar = () => {
         }
     };
 
+    const copyURL = () => {
+        let txt = window.location.href;
+        if ('clipboard' in navigator) {
+            window.alert('URL copied! (lets change this to a non-alert)');
+            return navigator.clipboard.writeText(txt);
+        } else {
+            return document.execCommand('copy', true, txt);
+        }
+    };
+
     return (
         <chakra.header
             borderBottom="1px"
@@ -89,6 +99,9 @@ const RoomNavBar = () => {
                             </MenuOptionGroup>
                         </MenuList>
                     </Menu>
+                    <Button size="sm" bg="secondary" color="white" onClick={copyURL}>
+                        Get Link
+                    </Button>
                     <Button
                         rightIcon={<SmallCloseIcon />}
                         size="sm"

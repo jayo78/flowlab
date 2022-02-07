@@ -10,11 +10,12 @@ const userRoute = require("./routes/userRoute");
 const roomRoute = require("./routes/roomRoute");
 const handler = require("./iohandler");
 const connectDB = require("./config/db");
+const { cleanEmptyRooms } = require("./rooms");
 
-// middleware Config
+// Middleware Config
 app.use(express.json());
 
-// routes Config
+// Routes Config
 app.use("/api/users", userRoute);
 app.use("/api/rooms", roomRoute);
 
@@ -42,3 +43,7 @@ server.listen(port, "0.0.0.0", async () => {
 
 // io init
 io.on("connection", handler);
+
+setInterval(() => {
+    cleanEmptyRooms();
+}, 600000);

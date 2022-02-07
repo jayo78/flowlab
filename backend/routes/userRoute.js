@@ -4,8 +4,11 @@ const {
     userRegister,
     userLogin,
     verifyUser,
-    resendVerification
+    resendVerification,
+    getUserTasks,
+    addTask,
 } = require('../controllers/userController');
+const getTask = require('../controllers/taskController').getTask
 //const { verifyJWT } = require("../middleware/auth/protect")
 //console.log(verifyJWT)
 // require auth middlewear
@@ -27,6 +30,11 @@ router.route("/sample")
 router.post('/login', userLogin);
 router.post('/resend', resendVerification);
 router.get('/verify/:token', verifyUser);
+
+// for tasks
+router.get('/:userID/tasks', getUserTasks);
+router.post('/:userID/tasks', addTask);
+router.get('/tasks/:taskID', getTask)
 /*
 router.get("/sample", verifyToken, (req, res) => {
     res.send("protect test success")

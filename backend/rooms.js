@@ -89,21 +89,31 @@ const getOpenRoom = () => {
     return null;
 };
 
+const getParticipants = (roomID) => {
+    console.log("[Rooms] getParticipants");
+    return rooms.get(roomID);
+};
+
 const cleanEmptyRooms = () => {
-    for (let [roomID, list] of rooms) {
+    console.log("[Rooms] cleanEmptyRooms");
+    for (let [roomID, list] of rooms.entries()) {
         if (list.length <= 0) {
             rooms.delete(roomID);
+            console.log(`room ${roomID} deleted`);
         }
     }
 };
 
 module.exports = {
     participantInRoom,
+    cleanEmptyRooms,
     roomHasSpace,
     roomExists,
     removeParticipant,
     addParticipant,
     removeRoom,
     getOpenRoom,
+    getParticipants,
     addRoom,
+    cleanEmptyRooms
 };

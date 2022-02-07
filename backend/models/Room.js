@@ -4,10 +4,6 @@ const mongoose = require("mongoose");
 
 const roomSchema = mongoose.Schema(
     {
-        // _id: {
-        // type: String,
-        // default: () => uuidv4().replace(/\-/g, "")
-        // },
         type: String,
         creator_id: String,
         messages: [
@@ -15,6 +11,18 @@ const roomSchema = mongoose.Schema(
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Message",
             },
+        ],
+        activeTasks: [
+            {
+                type: mongoose.Schema.Types.ObjectID,
+                ref: 'Task'
+            }
+        ],
+        finishedTasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Task'
+            }
         ],
     },
     { timestamps: true }

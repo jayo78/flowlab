@@ -2,7 +2,14 @@ const User = require("../models/User");
 const Participant = require("../models/Participant");
 const Room = require("../models/Room");
 const Message = require("../models/Message");
-const { addRoom, addParticipant, roomHasSpace, roomExists, getOpenRoom } = require("../rooms");
+const {
+    addRoom,
+    getParticipants,
+    addParticipant,
+    roomHasSpace,
+    roomExists,
+    getOpenRoom,
+} = require("../rooms");
 
 /*
  * create room is only hit by users and not used when the backend itself is spinning up rooms.
@@ -39,7 +46,9 @@ const createRoom = async (req, res) => {
 // can create anon participant or reference an authed user
 const createParticipant = async (req, res) => {
     console.log("[roomController] createParticipant");
-    let { roomID, userID, name } = req.body;
+    let roomID = req.params.roomID;
+    let { userID, name } = req.body;
+    console.log(roomID);
 
     // validate
     if (!roomExists(roomID)) {
@@ -123,9 +132,82 @@ const getMessages = async (req, res) => {
     });
 };
 
+const getActiveParticipants = async (req, res) => {
+    console.log("[roomController] getActiveParticipants");
+
+    let roomID = req.params.roomID;
+
+    let room = await Room.findOne({ _id: roomID });
+    if (!room) {
+        console.log("getActiveParticipants failed, unrecognized roomID");
+        return res.status(404);
+    }
+
+    let pIDs = getParticipants(roomID);
+    let participants = await Participant.find({ _id: { $in: pIDs } });
+
+    return res.status(200).json({
+        participants: participants,
+    });
+};
+
+const addRoomTask = async (req, res) => {
+    console.log("[roomController] addRoomTask");
+    const roomID = req.roomID;
+    const room = await Room.findOne({ _id: roomID });
+
+    if (!room) {
+        return res.status(400).json({ message: `room with id ${roomID} not found` });
+    }
+    
+    const taskID = req.taskID;
+    const task = await Task.findOne({ _id: taskID });
+    
+    if (!task) {
+        return res.status(400).json({ message: `user with id ${userID} not found` });
+    }
+
+    room.activeTasks.push(task);
+    return res.status(201).json({ message: 'task added to room flow' });
+};
+
+const removeRoomTask = async (req, res) => {
+    console.log("[roomController] removeRoomTask");
+    const roomID = req.roomID;
+    const room = await Room.findOne({ _id: roomID });
+
+    if (!room) {
+        return res.status(400).json({ message: `room with id ${roomID} not found` });
+    }
+    
+    const taskID = req.taskID;
+    const task = await Task.findOne({ _id: taskID });
+    
+    if (!task) {
+        return res.status(400).json({ message: `user with id ${userID} not found` });
+    }
+
+    const taskStatus = task.completed;
+    if (taskStatus) {
+        room.finishedTasks.push(task);
+    }
+
+    const activeTasks = room.activeTasks;
+    const filteredTasks = activeTasks.filter(task => task.id !== taskID);
+
+    room.activeTasks = filteredTasks;
+    await room.save();
+
+    return res.status(201).json({ message: 'Task added to room Flow' });
+};
+
+
 module.exports = {
     createRoom,
     createParticipant,
     findRoom,
     getMessages,
+    addRoomTask,
+    removeRoomTask,
+    getActiveParticipants,
 };
